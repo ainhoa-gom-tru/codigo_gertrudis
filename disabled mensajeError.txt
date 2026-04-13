@@ -1,0 +1,1 @@
+disabled="mensajeError || !validarNombre || !validarApellidos || !validarUsuario || !validarEmail || !validarContrasena || !validarContrasenas"

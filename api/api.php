@@ -1,0 +1,52 @@
+<?php
+//hacemos la conexión a la base de datos
+include 'db.php';
+//añadimos las cabeceras necesarias
+header('Access-Control-Allow-Origin: *'); // con esta podemos hacer solicitudes de cualquier origen
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE'); // añadimos los métodos
+header('Access-Control-Allow-Headers: Content-Type'); // añadimos las cabeceras permitidas
+header("Content-Type: application/json"); //para json
+
+//en caso de que se seleccione una opcción, damos respuesta 200
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+//para realizar una petición u otra dependiendo de lo que nos llegue por la ruta
+$ruta = explode('/', trim($_SERVER['PATH_INFO'], '/')); //obtenemos la ruta
+$seccion = $ruta[0] ?? null; // obtenemos a que "sección" estamos accediendo (productos, usuarios, etc)
+$metodo = $_SERVER['REQUEST_METHOD'];
+
+//switch para realizar una petición u otra dependiendo de la ruta
+switch ($seccion) {
+    case 'usuarios':
+        include 'usuarios.php';
+        break;
+    case 'productos':
+        include 'productos.php';
+        break;
+    case 'valoraciones':
+        include 'valoraciones.php';
+        break;
+    case 'juegos':
+        include 'juegos.php';
+        break;
+    case 'galeria':
+        include 'galeria.php';
+        break;
+    case 'blog':
+        include 'blog.php';
+        break;
+    case 'carrito':
+        include 'carrito.php';
+        break;
+    case 'pedidos':
+        include 'pedidos.php';
+        break;
+    default:
+        echo json_encode(['error' => 'No se ha encontrado la sección que buscas']);
+        break;
+}
+
+?>
