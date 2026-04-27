@@ -1,6 +1,4 @@
 <?php
-require 'db.php';
-
 // instaciamos la clase Database y hacemos la conexión a la base de datos
 $database = new Database();
 $db = $database->conexionBaseDeDatos();
@@ -100,11 +98,11 @@ function insertarNuevoProducto($db){
                 //nos aseuramos que el tamaño de la foto sea menos de 2MB
     			if($tamano_foto <= 2000000){
                     //si la imagen cumple con el ancho y alto establecido
-    				if($ancho == '225' && $alto == '225'){
+    				if($ancho == '700' && $alto == '700'){
                         //hasheamos el nombre de la imagen
 		    			$nuevo_nombre_foto = time().'-'.rand() . '.'.$extension_foto;
                         //movemos la foto a la carpeta donde se almacenan todas
-		    			if(move_uploaded_file($nombre_temporal_foto,"../productos/".$nuevo_nombre_foto)){
+		    			if(move_uploaded_file($nombre_temporal_foto,"productos/".$nuevo_nombre_foto)){
 		    				$datos_formulario['foto'] = $nuevo_nombre_foto;
 		    			} else{
 		    				echo json_encode(['error' => 'No es posible subir la imagen']);
@@ -183,10 +181,10 @@ function insertarNuevoProducto($db){
 //creamos la funcion para actualizar los datos del producto
 function actualizarProducto($db){
 
-    //obtenemos los datos que nos llegan
+//obtenemos los datos que nos llegan
     $data = json_decode(file_get_contents('php://input'), true);
 
-    //comprobamos que nos llegue el id
+    //comprobamos que nos llega el id
     if(empty($data['id'])){
         echo json_encode(['error' => 'ID requerido']);
         return;
@@ -195,40 +193,74 @@ function actualizarProducto($db){
     //sentencia try-catch para que nos indique que ha fallado la insercción (en caso de que se dé)
     try{
 
-        //para actualizar el nombre
-        if(!empty($data['nombre'])){ 
-            //actualizamos el rol
+        //array para almacenar los mensajes
+        $mensajes = [];
+
+        // validamos el nombre
+        if(!empty($data['nombre'])){
+
+            $expresionRegular = "/^[A-ZÁÉÍÓÚÑ][a-zA-Z0-9ÁÉÍÓÚáéíóúÑñ]*(?:\s[a-zA-Z0-9ÁÉÍÓÚáéíóúÑñ]+)*$/";
+
+            if(!preg_match($expresionRegular, $data['nombre'])){
+                echo json_encode(['error' => 'El nombre no es válido']);
+                return;
+            }
+
             $stmt = $db->prepare('UPDATE producto SET nombre = :nb WHERE id = :id');
-            $stmt->execute([':nb' => $data['nombre'],':id' => $data['id']]);
-                
-            echo json_encode(['success' => 'El nombre del producto ha sido actualizado con éxito']);
+            $stmt->execute([
+                ':nb' => $data['nombre'],
+                ':id' => $data['id']
+            ]);
 
+            $mensajes[] = 'nombre';
         }
 
-        //para actualizar el descripción
-        if(!empty($data['descripcion'])){ 
-            //actualizamos el rol
-            $stmt = $db->prepare('UPDATE producto SET descripcion = :dc WHERE id = :id');
-            $stmt->execute([':dc' => $data['descripcion'],':id' => $data['id']]);
-                
-            echo json_encode(['success' => 'La descripción del producto ha sido actualizado con éxito']);
-            
-        }
+        // validamos el precio
+        if(!empty($data['precio'])){
 
-        //para actualizar el precio
-        if(!empty($data['precio'])){ 
-            //actualizamos el rol
+            $expresionRegularPrecio = "/^\d{1,8}(\.\d{1,2})?$/";
+
+            if(!preg_match($expresionRegularPrecio, $data['precio']) || $data['precio'] < 1){
+                echo json_encode(['error' => 'El precio no es válido']);
+                return;
+            }
+
             $stmt = $db->prepare('UPDATE producto SET precio = :pc WHERE id = :id');
-            $stmt->execute([':pc' => $data['precio'],':id' => $data['id']]);
-                
-            echo json_encode(['success' => 'El precio del producto ha sido actualizado con éxito']);
-            
+            $stmt->execute([
+                ':pc' => $data['precio'],
+                ':id' => $data['id']
+            ]);
+
+            $mensajes[] = 'precio';
         }
+
+        // validamos las unidades
+        if(!empty($data['unidades'])){
+
+            $expresionRegularUnidades = "/^\d+$/";
+
+            if(!preg_match($expresionRegularUnidades, $data['unidades']) || $data['unidades'] < 0 || $data['unidades'] > 1000){
+                echo json_encode(['error' => 'El número de unidades no es válido']);
+                return;
+            }
+
+            $stmt = $db->prepare('UPDATE producto SET unidades = :nd WHERE id = :id');
+            $stmt->execute([
+                ':nd' => $data['unidades'],
+                ':id' => $data['id']
+            ]);
+
+            $mensajes[] = 'unidades';
+        }
+
+        echo json_encode([
+            'success' => 'Producto actualizado con éxito',
+            'campos_actualizados' => $mensajes
+        ]);
 
     } catch (PDOException $e){
-        echo json_encode(['error' => 'Error al actualizar los datos del productos']);
+        echo json_encode(['error' => 'Error al actualizar los datos del producto']);
     }
-
 }
 
 //creamos la función para eliminar un producto
@@ -252,7 +284,7 @@ function eliminarProducto($db){
         $comprobar_foto = $stmt->fetch();
 
         //obtenemos la ruta de la imagen
-        $ruta_imagen = "../productos/" . $comprobar_foto['foto'];
+        $ruta_imagen = "productos/" . $comprobar_foto['foto'];
 
         //en caso de que en la carpeta esté la imagen, la eliminamos de la carpeta
         if(file_exists($ruta_imagen)){

@@ -1,8 +1,21 @@
 <script setup>
+import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
 //declaramos un array con lso nombres de cada compañeras
 const companeras = ["Lucía", "Ainhoa", "Nazaret", "Alba"];
+
+//recuperamos el usuario logueaod del local storage
+const usuarioLogueado = JSON.parse(localStorage.getItem('user') || 'null');
+
+//creamos una variable para almacenar el nombre y la imagen en caso de que hubiera de usuario logueado
+const nombreUsuario = ref('');
+const fotoUsuario = ref('');
+
+if(usuarioLogueado){
+  nombreUsuario.value = usuarioLogueado.usuario;
+  fotoUsuario.value = usuarioLogueado.avatar;
+}
 
 </script>
 
@@ -41,23 +54,30 @@ const companeras = ["Lucía", "Ainhoa", "Nazaret", "Alba"];
                     <li class="nav-item">
                         <RouterLink to="/contacto" class="nav-link">Contacto<span class="sr-only"></span></RouterLink>
                     </li>
+                    <li class="nav-item">
+                        <RouterLink to="/gestion-usuarios" class="nav-link">Gestión usuarios<span class="sr-only"></span></RouterLink>
+                    </li>
                 </ul>
             </div>
             <div class="button">
-                <RouterLink to="/login" class="nav-link">
+                <RouterLink v-if="!usuarioLogueado" to="/login" class="nav-link">
                     <i class="bi bi-person-circle"></i>
                     <span>Iniciar sesión</span>
                 </RouterLink>
+                <div v-else>
+                    <RouterLink to="/cambiar-avatar">
+                        <img :src="`/avatar/${fotoUsuario}`" class="img-circle" alt="Avatar de tu usuario">
+                    </RouterLink>
+                    <RouterLink>
+                        <h5 class="centered">{{ nombreUsuario }}</h5>
+                    </RouterLink>
+                </div>
             </div>
         </div>
     </nav>
 </template>
 
 <style scoped>
-
-*{
-    font-family: "Noto Sans", sans-serif;
-}
 
 .navbar{
     position: relative;
@@ -173,6 +193,41 @@ li .nav-link{
     width: 100%;
     height: 100%;
     margin-top: 2%;
+}
+
+.button > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    padding: 1.6rem 1rem;
+}
+
+.button > div img {
+    width: 2.9rem;
+    height: 2.9rem;
+    border-radius: 50%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.button > div img:hover {
+    transform: scale(1.1);
+}
+
+.button > div h5 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    flex: 1;
+    margin-left: -4rem;
+}
+
+.button > div h5 a{
+    text-decoration: none;
 }
 
 </style>

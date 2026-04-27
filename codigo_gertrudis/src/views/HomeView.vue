@@ -5,7 +5,6 @@
 
   <section id="primera">
     <div>
-      <h1>Código Gertrudis</h1>
       <button>
         <span><RouterLink to="/conocenos">Pincha para conocer la historia</RouterLink></span>
         <i class="bi bi-arrow-right"></i>

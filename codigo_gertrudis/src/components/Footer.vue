@@ -15,13 +15,13 @@ const companeras = ["Lucía", "Ainhoa", "Nazaret", "Alba"];
             <div class="col">
                 <h5>Políticas</h5>
                 <span>
-                    <RouterLink to="/politicas-privacidad">Políticas de privacidad</RouterLink>
+                    <RouterLink to="/politicas-privacidad" class="dropdown-item">Políticas de privacidad</RouterLink>
                 </span>
                 <span>
-                    <RouterLink>Políticas de cookies</RouterLink>
+                    <RouterLink class="dropdown-item">Políticas de cookies</RouterLink>
                 </span>
                 <span>
-                    <RouterLink>Términos y condiciones</RouterLink>
+                    <RouterLink class="dropdown-item">Términos y condiciones</RouterLink>
                 </span>
             </div>
             <div class="col">
@@ -41,45 +41,89 @@ const companeras = ["Lucía", "Ainhoa", "Nazaret", "Alba"];
 
 <style scoped>
 
-    #fondo{
+    #fondo {
         background-color: #fcbf00;
-        color: white;
+        color: black;
+        padding: 2rem 1.5rem;
     }
 
-    .logo{
+    .row {
         display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 2rem;
+    }
+
+    .col {
+        flex: 1;
+        min-width: 180px;
+    }
+
+    .logo {
+        display: flex;
+        justify-content: center;
         align-items: center;
-        position: relative;
     }
 
-    img{
-        width: 80%;
+    .logo img {
+        width: 10rem;
+        max-width: 100%;
+        transition: transform 0.3s ease;
     }
 
-    h5{
-        margin-top: 12%;
+    .logo img:hover {
+        transform: scale(1.05);
     }
 
-    span{
+    h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        color: #000;
+    }
+
+    span {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    a {
+        text-decoration: none;
+        color: black;
+        font-size: 0.95rem;
+        transition: all 0.25s ease;
+        padding: 0.2rem 0.4rem;
+        border-radius: 0.4rem;
+        font-weight: 500;
+    }
+
+    a:hover {
+        color: #ff8800;
+        background-color: white;
+        transform: translateX(0.2rem);
+    }
+
+    .col:last-child {
         display: flex;
+        gap: 1rem;
+        justify-content: center;
+        align-items: center;
     }
 
-    span i{
-        margin-top: 1%;
-        margin-right: 2%;
-    }
-
-    p{
-        text-decoration: underline;
+    .col:last-child i {
+        font-size: 2rem;
         cursor: pointer;
-        margin-bottom: 2%;
+        transition: all 0.25s ease;
+        padding: 0.3rem;
+        border-radius: 0.4rem;
+        margin-top: 3.5rem;
     }
 
-    .redesSociales{
-        cursor: pointer;
-        width: 12%;
-        margin-top: 30%;
-        margin-left: 5%;
+    .col:last-child i:hover {
+        color: #ff8800;
+        background-color: white;
+        transform: translateY(-0.2rem) scale(1.1);
     }
 
 </style>

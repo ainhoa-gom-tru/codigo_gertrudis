@@ -11,8 +11,8 @@ class Database{
 
     //constructor de la clase
     public function __construct(){
-        $this->usuario = "";
-        $this->contrasena = "";
+        $this->usuario = "root";
+        $this->contrasena = "HPKWCQ";
         $this->baseDeDatos = "codigo_gertrudis";
         $this->host = "localhost";
     }

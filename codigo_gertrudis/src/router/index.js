@@ -7,6 +7,11 @@ import Companera from '@/views/Companera.vue'
 import Login from '@/views/Login.vue'
 import PolíticasPrivacidad from '@/views/PolíticasPrivacidad.vue'
 import Registrarse from '@/views/Registrarse.vue'
+import AnadirProducto from '@/views/Admin/AnadirProducto.vue'
+import DetallerUsuario from '@/views/Admin/DetallerUsuario.vue'
+import GestiónUsuarios from '@/views/Admin/GestiónUsuarios.vue'
+import EligeAvatar from '@/views/EligeAvatar.vue'
+import GestiónProductos from '@/views/Admin/GestiónProductos.vue'
 
 const routes = [
   {
@@ -55,6 +60,32 @@ const router = createRouter({
       name: 'registrarse',
       meta: { hideHeader: true, hideFooter: true },
       component: Registrarse
+    },
+    {
+      path: '/cambiar-avatar',
+      name: 'Cambia tu avatar',
+      meta: { hideHeader: true, hideFooter: true, hideNavBar: true, hideHeaderAdmin: true},
+      component: EligeAvatar
+    },
+    {
+      path: '/gestion-usuarios',
+      name: 'gestion de usuarios',
+      component: GestiónUsuarios
+    },
+    {
+      path: '/detalles/:usuario',
+      name: 'detalles usuario',
+      component: DetallerUsuario
+    },
+    {
+      path: '/nuevo-producto',
+      name: 'nuevo producto',
+      component: AnadirProducto
+    },
+    {
+      path: '/gestion-productos',
+      name: 'gestion de productos',
+      component: GestiónProductos
     },
     {
       path: '/politicas-privacidad',

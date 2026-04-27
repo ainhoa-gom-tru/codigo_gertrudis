@@ -1,6 +1,4 @@
 <?php
-require 'db.php';
-
 // instaciamos la clase Database y hacemos la conexión a la base de datos
 $database = new Database();
 $db = $database->conexionBaseDeDatos();
@@ -104,7 +102,7 @@ function insertarNuevoJuego($db){
                 //nos aseuramos que el tamaño de la foto sea menos de 2MB
     			if($tamano_foto <= 2000000){
                     //si la imagen cumple con el ancho y alto establecido
-    				if($ancho == '225' && $alto == '225'){
+    				if($ancho == '700' && $alto == '700'){
                         //hasheamos el nombre de la imagen
 		    			$nuevo_nombre_foto = time().'-'.rand() . '.'.$extension_foto;
                         //movemos la foto a la carpeta donde se almacenan todas

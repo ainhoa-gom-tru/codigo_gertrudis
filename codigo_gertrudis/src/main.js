@@ -20,25 +20,25 @@ export const ApiUrl = "http://localhost:8001/api.php/";
  */
 //hay errores
 export const estiloRojo = {
-  color : "red",
+  color : "#8b2c2c",
 }
 //no hay errores
 export const estiloVerde = {
-  color : "green"
+  color : "#19916a"
 }
 //no hay nada escrito
 export const estiloNatural = {
-    color: "#fcbf00"
+    color: "#ff8800"
 }
 
 //ahora hacemos lo mismo pero para los bordes de los inputs
 //hay errores
 export const bordeRojo = {
-    border: "2px solid red"
+    border: "2px solid #8b2c2c"
 }
 //no hya errores
 export const bordeVerde = {
-    border: "2px solid green"
+    border: "2px solid #19916a"
 }
 //no hay nada escrito
 export const bordeNatural = {

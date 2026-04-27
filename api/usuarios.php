@@ -217,7 +217,7 @@ function actualizarUsuario($db){
         if(!empty($data['validado'])){
             //validamos el usuario
             $stmt = $db->prepare('UPDATE usuario SET validado = :vd WHERE id = :id');
-            $stmt->execute([':vd' => true,':id' => $data['id']]);
+            $stmt->execute([':vd' => 1,':id' => $data['id']]);
 
             echo json_encode(['success' => 'El usuario ha sido validado con éxito']);
             return;
