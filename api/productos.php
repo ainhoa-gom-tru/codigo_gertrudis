@@ -1,4 +1,7 @@
 <?php
+//iniciamos la sesión
+session_start();
+
 // instaciamos la clase Database y hacemos la conexión a la base de datos
 $database = new Database();
 $db = $database->conexionBaseDeDatos();

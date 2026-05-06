@@ -5,13 +5,17 @@ import Tienda from '@/views/Tienda.vue'
 import Contacto from '@/views/Contacto.vue'
 import Companera from '@/views/Companera.vue'
 import Login from '@/views/Login.vue'
-import PolíticasPrivacidad from '@/views/PolíticasPrivacidad.vue'
 import Registrarse from '@/views/Registrarse.vue'
 import AnadirProducto from '@/views/Admin/AnadirProducto.vue'
 import DetallerUsuario from '@/views/Admin/DetallerUsuario.vue'
 import GestiónUsuarios from '@/views/Admin/GestiónUsuarios.vue'
 import EligeAvatar from '@/views/EligeAvatar.vue'
 import GestiónProductos from '@/views/Admin/GestiónProductos.vue'
+import PolíticasPrivacidad from '@/views/Políticas/PolíticasPrivacidad.vue'
+import PolíticasCookies from '@/views/Políticas/PolíticasCookies.vue'
+import TerminosCondiciones from '@/views/Políticas/TerminosCondiciones.vue'
+import Carrito from '@/views/Carrito.vue'
+import PasarelaPago from '@/views/PasarelaPago.vue'
 
 const routes = [
   {
@@ -88,9 +92,29 @@ const router = createRouter({
       component: GestiónProductos
     },
     {
+      path: '/carrito',
+      name: 'carrito',
+      component: Carrito
+    },
+    {
+      path: '/pasarela-pago',
+      name: 'pasarela de pago',
+      component: PasarelaPago
+    },
+    {
       path: '/politicas-privacidad',
       name: 'políticas de privacidad',
       component: PolíticasPrivacidad
+    },
+    {
+      path: '/politicas-cookies',
+      name: 'políticas de cookies',
+      component: PolíticasCookies
+    },
+    {
+      path: '/terminos-condiciones',
+      name: 'términos y condiciones',
+      component: TerminosCondiciones
     },
   ]
 })

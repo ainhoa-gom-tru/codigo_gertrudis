@@ -18,10 +18,10 @@ const companeras = ["Lucía", "Ainhoa", "Nazaret", "Alba"];
                     <RouterLink to="/politicas-privacidad" class="dropdown-item">Políticas de privacidad</RouterLink>
                 </span>
                 <span>
-                    <RouterLink class="dropdown-item">Políticas de cookies</RouterLink>
+                    <RouterLink to="/politicas-cookies" class="dropdown-item">Políticas de cookies</RouterLink>
                 </span>
                 <span>
-                    <RouterLink class="dropdown-item">Términos y condiciones</RouterLink>
+                    <RouterLink to="/terminos-condiciones" class="dropdown-item">Términos y condiciones</RouterLink>
                 </span>
             </div>
             <div class="col">
@@ -70,10 +70,6 @@ const companeras = ["Lucía", "Ainhoa", "Nazaret", "Alba"];
         width: 10rem;
         max-width: 100%;
         transition: transform 0.3s ease;
-    }
-
-    .logo img:hover {
-        transform: scale(1.05);
     }
 
     h5 {

@@ -59,6 +59,7 @@ function iniciarSesion(){
 
     fetch(ApiUrl + '/usuarios/login', {
         method: 'POST',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json'
         },

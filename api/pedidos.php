@@ -22,14 +22,14 @@ function realizarPedido($db){
     //obtenemos los datos que nos llegan
     $data = json_decode(file_get_contents('php://input'), true);
 
-    //obtenemos el id del usuario
-    $usuario_id = $_SESSION['usuario']['id'];
-
     //comprobamos que hay un usuario logueado
     if (!isset($_SESSION['usuario']['id'])) {
         echo json_encode(['error' => 'El usuario no ha iniciado sesión']);
         return;
     }
+
+    //obtenemos el id del usuario
+    $usuario_id = $_SESSION['usuario']['id'];
 
     //sentencia try-catch
     try{
@@ -44,18 +44,19 @@ function realizarPedido($db){
         //en caso de que no haya carrito
         if (!$carrito){
             echo json_encode(['error' => 'No hay ningún carrito']);
+            return;
         }
 
         //obtenemos el id del pedido
-        $pedido_id = $pedido_id['id'];
+        $pedido_id = $carrito['id'];
 
         //Obtenemos los productos del carrito
-        $stmt = $db->prepare('SELECT pd.producto_id, pd.cantidad, p.precio, p.unidades
+        $stmt = $db->prepare('SELECT pp.producto_id, pp.cantidad, p.precio, p.unidades
         FROM productos_pedido pp
-        JOIN producto p ON p.id = pd.producto_id,
-        WHERE pd.pedido_id = :pd');
+        JOIN producto p ON p.id = pp.producto_id
+        WHERE pp.pedido_id = :pd');
         $stmt->execute([':pd' => $pedido_id]);
-        $productos = $stmt->fetchAll(PDO:FETCH_ASSOC);
+        $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         //asignamos 0 al total
         $total = 0;
@@ -65,33 +66,43 @@ function realizarPedido($db){
 
             //comprobamos que queden unidades del producto
             if($producto['unidades'] < $producto['cantidad']){
-                echo json_encode(['error' => 'No hay suficientes unidades de este producto' . $producto['id']]);
+                echo json_encode(['error' => 'No hay suficientes unidades de este producto']);
                 return;
             }
 
             //guardamos el precio del producto (en caso de que haya sufrido modificaciones)
             $stmt = $db->prepare('UPDATE productos_pedido SET precio = :p WHERE pedido_id = :pd AND producto_id = :pi');
-            $stmt->execute([':p' => $precio],
-                [':pd' => $pedido_id], 
-                [':pi' => $producto_id]);
-            
+            $stmt->execute([
+                ':p' => $producto['precio'],
+                ':pd' => $pedido_id,
+                ':pi' => $producto['producto_id']
+            ]);
+
             //restamos las unidades del pedido de la tabla producto
-            $stmt->prepare('UPDATE producto SET unidades = unidades - :c WHERE id = :id');
-            $stmt->execute([':c' => $producto['cantidad']],
-                [':id' => $producto['id']]);
-            
+            $stmt = $db->prepare('UPDATE producto SET unidades = unidades - :c WHERE id = :id');
+            $stmt->execute([
+                ':c' => $producto['cantidad'],
+                ':id' => $producto['producto_id']
+            ]);
+
             //calculamos el precio del pedido (unidades * precio)
             $total += $producto['precio'] * $producto['cantidad'];
 
-            //actualizamos el precio total del pedido
-            $stmt = $db->prepare('UPDATE pedido SET total = :t WHERE id = :id');
-            $stmt->execute([':t' => $total],
-                [':id' => $pedido_id]);
-            
-            echo json_encode(['success' => 'Pedido realizado correctamente']);
-
         }
+
+        //actualizamos el precio total del pedido
+        $stmt = $db->prepare('UPDATE pedido SET total = :t WHERE id = :id');
+        $stmt->execute([
+            ':t' => $total,
+            ':id' => $pedido_id
+        ]);
+
+        $db->commit();
+
+        echo json_encode(['success' => 'Pedido realizado correctamente']);
+
     } catch (Exception $e){
+        $db->rollBack();
         echo json_encode(['error' => 'No es posible realizar el pedido']);
         return;
     }

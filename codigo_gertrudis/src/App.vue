@@ -8,11 +8,21 @@ import NavBar from './components/NavBar.vue';
 //obtenemos el usuario logueado del localstorage
 const user = ref(JSON.parse(localStorage.getItem('user')));
 
+//comprobamos que hay usuario logueado
+const usuarioLogeado = computed(() => {
+  if(user.value){
+    return true;
+  } else {
+    return false;
+  }
+})
+
 //comprobamos que el rol es administrador
 const esAdmin = computed(() => {
-  if(user.value.rol === 'admin'){
-    return true
-  } else {
+  if(usuarioLogeado.value && user.value && user.value.rol === 'admin'){
+    return true;
+  }
+  if(usuarioLogeado.value && user.value && user.value.rol !== 'admin'){
     return false;
   }
 })
@@ -20,12 +30,12 @@ const esAdmin = computed(() => {
 </script>
 
 <template>
-  <Header v-if="!esAdmin && !$route.meta.hideHeader"></Header>
   <HeaderAdmin v-if="esAdmin && !$route.meta.hideHeaderAdmin"></HeaderAdmin>
+  <Header v-else></Header>
   <div id="layout">
     <NavBar v-if="esAdmin && !$route.meta.hideNavBar"></NavBar>
     <main id="contenido">
-      <RouterView></RouterView>
+      <RouterView :key="$route.params.nombre"></RouterView>
     </main>
   </div>
   <Footer v-if="!$route.meta.hideFooter"></Footer>

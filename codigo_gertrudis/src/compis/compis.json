@@ -1,14 +1,102 @@
 [
     {
-        "nombre": "Lucía"
+        "nombre": "Lucía",
+        "fondo": "fondoLucia.png",
+        "foto": "lucia.png",
+        "color": "#e488b1",
+        "galeria": [
+            {
+                "fotografia": "animalLucia.png",
+                "tooltip": "Animal favorito: Perro"
+            },
+            {
+                "fotografia": "cancionLucia.png",
+                "tooltip": "Artista favorito: Pablo Alborán"
+            },
+            {
+                "fotografia": "estacionLucia.png",
+                "tooltip": "Estación del año preferida: Primavera"
+            },
+            {
+                "fotografia": "hobbitLucia.png",
+                "tooltip": "Hobbit: ver series"
+            }
+        ],
+        "descripcion": "Lucía es una persona muy sensible y amante de los animales, que destaca por su empatía hacia ellos y su forma de cuidarlos siempre que puede. En su tiempo libre disfruta viendo series y películas, especialmente romances, además de interesarse por la moda, con preferencia por los vestidos, y por la música de artistas como Pablo Alborán y Aitana."
     },
     {
-        "nombre": "Ainhoa"
+        "nombre": "Ainhoa",
+        "fondo": "fondoAinhoa.png",
+        "foto": "ainhoa.png",
+        "color": "#4eb2e5",
+        "galeria": [
+            {
+                "fotografia": "animalAinhoa.png",
+                "tooltip": "Animal favorito: Cobaya"
+            },
+            {
+                "fotografia": "cancionAinhoa.png",
+                "tooltip": "Artista favorito: Melendi"
+            },
+            {
+                "fotografia": "estacionAinhoa.png",
+                "tooltip": "Estación del año preferida: Invierno"
+            },
+            {
+                "fotografia": "hobbitAinhoa.png",
+                "tooltip": "Hobbit: dibujar y pintar"
+            }
+        ],
+        "descripcion": "Ainhoa es una persona muy familiar que valora profundamente el tiempo con sus seres queridos y los recuerdos que comparte con ellos. Le gusta dedicar su tiempo a actividades creativas como dibujar y pintar, y también disfruta del cine de acción, especialmente de la saga Fast and Furious."
     },
     {
-        "nombre": "Nazaret"
+        "nombre": "Nazaret",
+        "fondo": "fondoNazaret.png",
+        "foto": "nazaret.png",
+        "color": "#90c369",
+        "galeria": [
+            {
+                "fotografia": "animalNazaret.png",
+                "tooltip": "Animal favorito: Lobo"
+            },
+            {
+                "fotografia": "cancionNazaret.png",
+                "tooltip": "Artista favorito: Extremoduro"
+            },
+            {
+                "fotografia": "estacionNazaret.png",
+                "tooltip": "Estación del año preferida: Invierno"
+            },
+            {
+                "fotografia": "hobbitNazaret.png",
+                "tooltip": "Hobbit: senderismo"
+            }
+        ],
+        "descripcion": "Nazaret es una persona creativa y con una gran sensibilidad artística. Le apasiona el cine, la música rock y las actividades al aire libre como el senderismo, además de tener un estilo y una forma de ver la vida donde busca la belleza incluso en los detalles más oscuros."
     },
     {
-        "nombre": "Alba"
+        "nombre": "Alba",
+        "fondo": "fondoAlba.png",
+        "foto": "alba.png",
+        "color": "#9c7097",
+        "galeria": [
+            {
+                "fotografia": "animalAlba.png",
+                "tooltip": "Animal favorito: Perro"
+            },
+            {
+                "fotografia": "cancionAlba.png",
+                "tooltip": "Artista favorito: Ana Mena"
+            },
+            {
+                "fotografia": "estacionAlba.png",
+                "tooltip": "Estación del año preferida: Primavera"
+            },
+            {
+                "fotografia": "hobbitAlba.png",
+                "tooltip": "Hobbit: fotografia"
+            }
+        ],
+        "descripcion": "Alba es una persona algo despistada pero muy creativa. Le apasiona la fotografía y el cine romántico, además de disfrutar de los pequeños detalles de la vida, la música con la que se motiva y los momentos especiales que comparte en su día a día."
     }
 ]

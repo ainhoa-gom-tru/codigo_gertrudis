@@ -1,10 +1,14 @@
 <?php
+require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/../env.php';
+cargarEnv(__DIR__ . '/../.env');
 //hacemos la conexión a la base de datos
 include 'db.php';
 //añadimos las cabeceras necesarias
-header('Access-Control-Allow-Origin: *'); // con esta podemos hacer solicitudes de cualquier origen
+header("Access-Control-Allow-Origin: http://localhost:5173");
+header("Access-Control-Allow-Credentials: true"); //estas dos son para poder pasar la cookie de session php
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE'); // añadimos los métodos
-header('Access-Control-Allow-Headers: Content-Type'); // añadimos las cabeceras permitidas
+header('Access-Control-Allow-Headers: Content-Type');
 header("Content-Type: application/json"); //para json
 
 //en caso de que se seleccione una opcción, damos respuesta 200

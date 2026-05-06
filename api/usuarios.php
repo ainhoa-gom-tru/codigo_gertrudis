@@ -186,7 +186,12 @@ function iniciarSesion($db){
     }
 
     //guardamos todos los datos del usuario logueado en la sesion
-    $_SESSION['usuario'] = $usuarioLogeado['usuario'];
+    $_SESSION['usuario'] = [
+        'id' => $usuarioLogeado['id'],
+        'usuario' => $usuarioLogeado['usuario'],
+        'email' => $usuarioLogeado['email'],
+        'rol' => $usuarioLogeado['rol']
+    ];
     echo json_encode($usuarioLogeado);
     
 }

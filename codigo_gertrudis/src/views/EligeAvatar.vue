@@ -17,7 +17,7 @@ if(usuarioLogueado){
 }
 
 //array con las fotos de los avatares
-const avatars = ['avatar1.png','avatar2.png','avatar3.png','avatar4.png'];
+const avatars = ['avatar1.png','avatar2.png','avatar3.png','avatar4.png','avatar5.png','avatar6.png','avatar7.png','avatar8.png','avatar9.png','avatar10.png','avatar11.png','avatar12.png'];
 
 
 //funcion para cambiar  el avatar
@@ -75,7 +75,7 @@ function actualizarAvatar(){
         align-items: center;
         gap: 4rem;
         min-height: 100vh;
-        padding: 2rem;
+        padding: 1rem;
         flex-wrap: wrap;
     }
 
