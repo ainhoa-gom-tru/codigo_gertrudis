@@ -60,6 +60,7 @@ CREATE TABLE IF NOT EXISTS valoracion (
         usuario_id INT NOT NULL,
         producto_id INT NOT NULL,
         UNIQUE (usuario_id, producto_id),
+        cliente_usuario VARCHAR(100) NOT NULL,
         puntuacion INT NOT NULL CHECK (puntuacion BETWEEN 1 AND 5),
         comentario TEXT,
         fecha_valoracion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

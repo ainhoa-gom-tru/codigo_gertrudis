@@ -33,13 +33,6 @@ function cerrarSesion(){
                     <img src="/logotipo.png" alt="Logotipo de Código Gertrudis">
                 </RouterLink>
             </div>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Encuentra tu producto..." aria-label="Buscar productos"/>
-                <button type="submit">Buscar</button>
-            </form>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
@@ -74,7 +67,7 @@ function cerrarSesion(){
                     <RouterLink to="/cambiar-avatar">
                         <img :src="`/avatar/${fotoUsuario}`" class="img-circle" alt="Avatar de tu usuario">
                     </RouterLink>
-                    <RouterLink>
+                    <RouterLink :to="`panel-usuario/${nombreUsuario}`">
                         <h5 class="centered">{{ nombreUsuario }}</h5>
                     </RouterLink>
                     <RouterLink to="/carrito" id="carrito">

@@ -3,38 +3,49 @@ import { ApiUrl, bordeNatural, bordeRojo, bordeVerde, estiloNatural, estiloRojo,
 import { computed, ref } from 'vue';
 
 //creamos las siguientes variables
-const nombreProducto = ref('');
-const descripcionProducto = ref('');
+const titulo = ref('');
+const texto = ref('');
+const categorias = ref(['arte', 'viajes', 'moda', 'música']);
+const nuevaCategoria = ref('');
 const foto = ref(null);
 const dimensiones = ref(null);
 const extension = ref(null);
-const precio = ref('');
-const unidades = ref('');
 const mostrarMensaje = ref(false);
 const mensaje = ref('');
 
-//creamos una variable para almacenar una expresión regular que valide el nombre del producto
+//creamos una variable para almacenar una expresión regular que valide el título del blog
 const expresionRegular = /^[A-ZÁÉÍÓÚÑ][a-zA-Z0-9ÁÉÍÓÚáéíóúÑñ]*(?:\s[a-zA-Z0-9ÁÉÍÓÚáéíóúÑñ]+)*$/;
 
-//comprobamos que el nombre que nos escriben pasa la validación
-const validarNombre = computed(() => {
-    if (!expresionRegular.test(nombreProducto.value) && nombreProducto.value.length > 1){
+//comprobamos que el título que nos escriben pasa la validación
+const validarTítulo = computed(() => {
+    if (!expresionRegular.test(titulo.value) && titulo.value.length > 1){
         return false;
-    } else if (nombreProducto.value.length === 0){
+    } else if (titulo.value.length === 0){
         return null;
     } else {
         return true;
     }
 })
 
-//creamos una expresión regular para la descripción
-const expresionRegularDescripcion = /^[A-Za-zÁÉÍÓÚáéíóúÑñ0-9 ,.\n]+$/;
+//comprobamos que la categoría seleccionada es válida
+const validarCategoria = computed(() => {
+    if (!categorias.value.includes(nuevaCategoria.value) && nuevaCategoria.value.length > 0){
+        return false;
+    } else if (nuevaCategoria.value.length === 0){
+        return null;
+    } else {
+        return true;
+    }
+})
+
+//creamos una expresión regular para el texto
+const expresionRegularTexto = /^[\s\S]+$/;
 
 //comprobamos que la descripcion que nos escriben pasa la validación
-const validarDescripcion = computed(() => {
-    if (!expresionRegularDescripcion.test(descripcionProducto.value) && descripcionProducto.value.length > 1){
+const validarTexto = computed(() => {
+    if (!expresionRegularTexto.test(texto.value) && texto.value.length > 1){
         return false;
-    } else if (descripcionProducto.value.length === 0){
+    } else if (texto.value.length === 0){
         return null;
     } else {
         return true;
@@ -88,37 +99,6 @@ const tamanoImagen = computed(() => {
     }
 });
 
-//creamos una expresión regular para validar le precio del producto
-const expresionRegularPrecio = /^\d{1,8}(\.\d{1,2})?$/;
-
-//comprobamos que el precio que nos escriben pasa la validación
-const validarPrecio = computed(() => {
-    if (!expresionRegularPrecio.test(precio.value) && precio.value.length > 1){
-        return false;
-    } else if (precio.value.length === 0){
-        return null;
-    } else if (parseFloat(precio.value) < 1){
-        return false;
-    } else {
-        return true;
-    }
-});
-
-//creamos una expresión regular para validar que las unidades
-const expresionRegularUnidades = /^\d+$/;
-
-//comprobamos que la descripcion que nos escriben pasa la validación
-const validarUnidades = computed(() => {
-    if (!expresionRegularUnidades.test(unidades.value) && unidades.value.length > 1){
-        return false;
-    } else if (unidades.value.length === 0){
-        return null;
-    } else if (unidades.value < 0 || unidades.value > 1000){
-        return false;
-    } else {
-        return true;
-    }
-});
 
 //function para cerrar el mensaje
 function cerrarMensaje(){
@@ -126,49 +106,31 @@ function cerrarMensaje(){
 }
 
 //funcion para añadir un nuevo producto
-function anadirProducto(){
-    const productoData = new FormData();
-    productoData.append('nombre', nombreProducto.value);
-    productoData.append('descripcion', descripcionProducto.value);
-    productoData.append('foto', foto.value);
-    productoData.append('precio', precio.value);
-    productoData.append('unidades', unidades.value);
+function anadirEntradaBlog(){
+    const entradaData = new FormData();
+    entradaData.append('titulo', titulo.value);
+    entradaData.append('texto', texto.value);
+    entradaData.append('categoria', nuevaCategoria.value);
+    entradaData.append('foto', foto.value);
 
-    fetch(ApiUrl + '/productos', {
+    fetch(ApiUrl + '/blog', {
         method: 'POST',
-        body: productoData
+        credentials: 'include',
+        body: entradaData
     })
     .then(response => response.json())
     .then(data => {
-
-        //comprobamos que si el producto ya existe en la base de datos
-        if (data.error) {
-            mensaje.value = "El producto ya existe en la web";
-            mostrarMensaje.value = true;
-            //vaciamos el formulario
-            nombreProducto.value = '';
-            descripcionProducto.value = '';
-            foto.value = null;
-            dimensiones.value = null;
-            extension.value = null;
-            precio.value = '';
-            unidades.value = '';
-            return;
-        }
-
         console.log('Respuesta:', data);
         //vaciamos el formulario
-        nombreProducto.value = '';
-        descripcionProducto.value = '';
+        titulo.value = '';
+        texto.value = '';
         foto.value = null;
         dimensiones.value = null;
         extension.value = null;
-        precio.value = '';
-        unidades.value = '';
     })
     .catch(error => console.error('Error:', error));
     mostrarMensaje.value = true;
-    mensaje.value = '¡Has añadido un nuevo producto con éxito!';
+    mensaje.value = '¡Has añadido una nueva entrada con éxito!';
 }
 
 </script>
@@ -182,30 +144,44 @@ function anadirProducto(){
                 <i v-else class="bi bi-x-octagon-fill"></i>
                 <p class="texto-mensaje">{{ mensaje }}</p>
             </div>
-            <form @submit.prevent="anadirProducto">
+            <form @submit.prevent="anadirEntradaBlog">
                 <div class="mb-2">
-                    <label :style="validarNombre === null ? estiloNatural : !validarNombre ? estiloRojo : estiloVerde" for="nombre" class="form-label" aria-label="Nombre del producto">Nombre
-                        <span v-if="validarNombre === null" :style="estiloNatural">*</span>
-                        <i v-else-if="validarNombre !== null && !validarNombre" :style="estiloRojo" class="bi bi-x"></i>
+                    <label :style="validarTítulo === null ? estiloNatural : !validarTítulo ? estiloRojo : estiloVerde" for="titulo" class="form-label" aria-label="Título del blog">Título
+                        <span v-if="validarTítulo === null" :style="estiloNatural">*</span>
+                        <i v-else-if="validarTítulo !== null && !validarTítulo" :style="estiloRojo" class="bi bi-x"></i>
                         <i v-else :style="estiloVerde" class="bi bi-check"></i>
                     </label>
                     <div class="input">
                         <i class="bi bi-pencil-fill"></i>
-                        <input :style="validarNombre === null ? bordeNatural : !validarNombre ? bordeRojo : bordeVerde" v-model="nombreProducto" type="text" class="form-control" id="nombre" aria-describedby="Nombre producto" placeholder="Ej: Pack completo revista edición n1" required>
+                        <input :style="validarTítulo === null ? bordeNatural : !validarTítulo ? bordeRojo : bordeVerde" v-model="titulo" type="text" class="form-control" id="titulo" aria-describedby="Título del blog" placeholder="Ej: Top 3 canciones de mayo 2026" required>
                     </div>
-                    <p v-if="validarNombre !== null && !validarNombre" :style="estiloRojo">* Nombre no válido, recuerda que la primera debe ser mayúscula</p>
+                    <p v-if="validarTítulo !== null && !validarTítulo" :style="estiloRojo">* Título no válido, recuerda que la primera debe ser mayúscula</p>
                 </div>
                 <div class="mb-2">
-                    <label :style="validarDescripcion === null ? estiloNatural : !validarDescripcion ? estiloRojo : estiloVerde" for="descripcion" class="form-label" aria-label="Descripcion del producto">Descripción
-                        <span v-if="validarDescripcion === null" :style="estiloNatural">*</span>
-                        <i v-else-if="validarDescripcion !== null && !validarDescripcion" :style="estiloRojo" class="bi bi-x"></i>
+                    <label :style="validarCategoria === null ? estiloNatural : !validarCategoria ? estiloRojo : estiloVerde" for="categoria" class="form-label" aria-label="Categoria del blog">Categoria
+                        <span v-if="validarCategoria === null" :style="estiloNatural">*</span>
+                        <i v-else-if="validarCategoria !== null && !validarCategoria" :style="estiloRojo" class="bi bi-x"></i>
+                        <i v-else :style="estiloVerde" class="bi bi-check"></i>
+                    </label>
+                    <div class="input">
+                        <select v-model="nuevaCategoria" name="categoria">
+                            <option disabled value="">Selecciona una categoría</option>
+                            <option v-for="(categoria, index) in categorias" :key="index" :value="categoria">{{ categoria }}</option>
+                        </select>
+                    </div>
+                    <p v-if="validarTítulo !== null && !validarTítulo" :style="estiloRojo">* Título no válido, recuerda que la primera debe ser mayúscula</p>
+                </div>
+                <div class="mb-2">
+                    <label :style="validarTexto === null ? estiloNatural : !validarTexto ? estiloRojo : estiloVerde" for="texto" class="form-label" aria-label="Texto del blog">Texto
+                        <span v-if="validarTexto === null" :style="estiloNatural">*</span>
+                        <i v-else-if="validarTexto !== null && !validarTexto" :style="estiloRojo" class="bi bi-x"></i>
                         <i v-else :style="estiloVerde" class="bi bi-check"></i>
                     </label>
                     <div class="input">
                         <i class="bi bi-card-text"></i>
-                        <textarea v-model="descripcionProducto" name="descripcion" rows="1" placeholder="Ej: Con este pack completo tendrá el juego de Gertrudis y la edición número 1" required></textarea>
+                        <textarea v-model="texto" name="texto" rows="1" placeholder="Ej: El top número uno de este mes es la canción de Sin pena" required></textarea>
                     </div>
-                    <p v-if="validarDescripcion !== null && !validarDescripcion" :style="estiloRojo">* La descripción no es válida</p>
+                    <p v-if="validarTexto !== null && !validarTexto" :style="estiloRojo">* El texto no es válidos</p>
                 </div>
                 <div class="mb-2">
                     <label :style="foto == null ? estiloNatural : tamanoImagen ? estiloVerde : estiloRojo" for="foto" aria-label="Subir foto del producto">Sube una fotografía del producto
@@ -217,31 +193,7 @@ function anadirProducto(){
                     <p v-if="foto && !extension" :style="estiloRojo">* La extensión no es válida, solo archivos .webp</p>
                     <p v-if="foto && !dimensiones" :style="estiloRojo">* La imagen no es válida, solo tamaño de 700x700px</p>
                 </div>
-                <div class="mb-2">
-                    <label :style="validarPrecio === null ? estiloNatural : !validarPrecio ? estiloRojo : estiloVerde" for="precio" class="form-label" aria-label="Precio del producto">Precio
-                        <span v-if="validarPrecio === null" :style="estiloNatural">*</span>
-                        <i v-else-if="validarPrecio !== null && !validarPrecio" :style="estiloRojo" class="bi bi-x"></i>
-                        <i v-else :style="estiloVerde" class="bi bi-check"></i>
-                    </label>
-                    <div class="input">
-                        <i class="bi bi-pencil-fill"></i>
-                        <input :style="validarPrecio === null ? bordeNatural : !validarPrecio ? bordeRojo : bordeVerde" v-model="precio" type="text" class="form-control" id="precio" aria-describedby="Precio producto" placeholder="Ej: 10" required>
-                    </div>
-                    <p v-if="validarPrecio !== null && !validarPrecio" :style="estiloRojo">* El formato del precio no es válido</p>
-                </div>
-                <div class="mb-2">
-                    <label :style="validarUnidades === null ? estiloNatural : !validarUnidades ? estiloRojo : estiloVerde" for="unidades" class="form-label" aria-label="Unidades del producto">Unidades
-                        <span v-if="validarUnidades === null" :style="estiloNatural">*</span>
-                        <i v-else-if="validarUnidades !== null && !validarUnidades" :style="estiloRojo" class="bi bi-x"></i>
-                        <i v-else :style="estiloVerde" class="bi bi-check"></i>
-                    </label>
-                    <div class="input">
-                        <i class="bi bi-pencil-fill"></i>
-                        <input :style="validarUnidades === null ? bordeNatural : !validarUnidades ? bordeRojo : bordeVerde" v-model="unidades" type="text" class="form-control" id="unidades" aria-describedby="Unidades producto" placeholder="Ej: 54" required>
-                    </div>
-                    <p v-if="validarUnidades !== null && !validarUnidades" :style="estiloRojo">* El formato de unidades no es válido</p>
-                </div>
-                <button type="submit" class="btn btn-primary" aria-label="Añadir producto" id="enviar" :disabled="!validarNombre || !validarDescripcion || !validarPrecio || !validarUnidades || !tamanoImagen || !dimensiones || !extension">Enviar</button>
+                <button type="submit" class="btn btn-primary" aria-label="Añadir entrada de blog" id="enviar" :disabled="!validarTexto || !validarTítulo || !validarCategoria || !tamanoImagen || !dimensiones || !extension">Añadir</button>
             </form>
         </main>
     </div>

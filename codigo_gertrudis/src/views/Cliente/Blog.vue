@@ -4,68 +4,63 @@ import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
 //crea las siguientes variables
-const productos = ref([]);
-const exito = ref(false);
-const error = ref(false);
+const entradas = ref([]);
+const entradaEliminar = ref(null);
+const mensaje = ref('');
+const mostrarMensaje = ref(false);
 
 //recuperamos el usuario logueaod del local storage
 const usuarioLogueado = JSON.parse(localStorage.getItem('user') || 'null');
 
-//creamos una variable para almacenar el nombre en caso de que hubiera de usuario logueado
-const nombreUsuario = ref('');
+//creamos una variable para almacenar el id en caso de que hubiera de usuario logueado
+const idUsuario = ref('');
 
 if(usuarioLogueado){
-  nombreUsuario.value = usuarioLogueado.usuario;
+  idUsuario.value = usuarioLogueado.id;
 }
 
 //funcion para obtener todos los usuarios
-function obtenerTodosProductos(){
-    fetch(ApiUrl + '/productos', {
+function obtenerTodasEntradas(){
+    fetch(ApiUrl + '/blog', {
         method: 'GET',
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Productos:', data)
-        productos.value = data;
+        console.log('Entradas:', data)
+        entradas.value = data;
     })
     .catch(error => console.error('Error:', error));
 }
 
-obtenerTodosProductos();
+obtenerTodasEntradas();
 
-//funcion para añadir los productos al carrito
-function añadirCarrito(producto) {
-
-    if(!usuarioLogueado){
-        error.value = true;
-        return;
-    }
-
-    fetch(ApiUrl + '/carrito', {
-        method: 'POST',
-        credentials: 'include',
+//funciton apra eliminar la entrada
+function eliminarEntrada(){
+    fetch(ApiUrl + '/blog', {
+        method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
         },
+        credentials: 'include',
         body: JSON.stringify({
-            producto_id: producto.id,
-            cantidad: 1
+            id: entradaEliminar.value
         })
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Añadido al carrito:', data);
-        exito.value = true;
+        console.log('Respuesta:', data)
+        obtenerTodasEntradas();
+        entradaEliminar.value = null;
+        console.log('Respuesta:', data)
+        mensaje.value = "La entrada ha sido eliminada con éxito";
+        mostrarMensaje.value = true;
     })
-    .catch(error => {
-        console.error('Error:', error)
-    });
+    .catch(error => console.error('Error:', error));
 }
 
-//hacemos una funcion para cerrar el modal
+//function para cerrar el modal
 function cerrarModal(){
-    exito.value = false;
-    error.value = false;
+    entradaEliminar.value = null;
 }
 
 </script>
@@ -73,70 +68,46 @@ function cerrarModal(){
 <template>
     <div class="hero">
         <img src="/fondo tienda.png">
-        <h2>Productos</h2>
+        <h2>Blog</h2>
     </div>
-    <form>
-        <div>
-            <input type="text" placeholder="Encuentra tu producto">
+    <div id="todasEntradas">
+        <div v-if="mostrarMensaje" class="mensaje" :class="mensaje.includes('éxito') ? 'success' : 'error'">
+            <button @click="cerrarMensaje">X</button>
+            <i v-if="mensaje.includes('éxito')" class="bi bi-check2"></i>
+            <i v-else class="bi bi-x-octagon-fill"></i>
+            <p class="texto-mensaje">{{ mensaje }}</p>
         </div>
-        <div>
-            <input type="number" placeholder="1€" min="1">
-        </div>
-        <button>
-            <i class="fa fa-search" aria-hidden="true"></i>
-            Buscar
-        </button>
-    </form>
-    <div id="todosProductos">
-        <div v-for="producto in productos" class="card" style="width: 18rem;">
+        <div v-for="entrada in entradas" class="card" style="width: 18rem;">
             <div>
-                <RouterLink :to="`/detalles-producto/${producto.nombre}`">
-                    <img :src="`http://localhost:8001/productos/${producto.foto}`" class="card-img-top" alt="Foto del producto">
-                </RouterLink>
-                <div id="valoracion">
-                    <p>4.5</p>
-                    <i class="bi bi-star-fill"></i>
-                </div>
+                <img :src="`http://localhost:8001/blog/${entrada.foto}`" class="card-img-top" alt="Foto de la entrada del blog">
+                <button v-if="entrada.usuario_id === idUsuario" class="btn-eliminar" @click="entradaEliminar = entrada.id">
+                    <i class="bi bi-trash-fill"></i>
+                </button>
             </div>
             <div class="card-body">
-                <RouterLink :to="`/detalles-producto/${producto.nombre}`">
-                    <h5 class="card-title">{{ producto.nombre }}</h5>
-                </RouterLink>
-                <p class="card-text">
-                    {{ producto.precio.toString().replace('.', ',') }}€
-                </p>
-                <button @click="añadirCarrito(producto)">Añadir al carrito</button>
+                <h5 class="card-title">{{ entrada.titulo }}</h5>
+                <p class="card-text">{{ entrada.texto }}</p>
+                <button>
+                    <RouterLink :to="`/detalles-entrada/${entrada.titulo}`">
+                        Leer más
+                    </RouterLink>
+                </button>
             </div>
         </div>
     </div>
-    <div v-if="exito" class="modal-overlay " tabindex="-1" role="dialog">
+    <div v-if="entradaEliminar !=null" class="modal-overlay " tabindex="-1" role="dialog">
         <div class="modal-container" >
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 :style="estiloVerde" class="modal-title fs-5" id="eliminarUsuario">Producto añadido exitosamente</h1>
+                    <h1 :style="estiloRojo" class="modal-title fs-5" id="eliminarUsuario">Eliminar entrada</h1>
                     <button type="button" class="btn-close" @click="cerrarModal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Producto añadido a la cesta con éxito</p>
+                    <p>¿Estás seguro que quieres eliminar esta entrada?</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-cerrar" @click="cerrarModal">Cerrar</button>
-                </div>     
-            </div>
-        </div>
-    </div>
-    <div v-if="error" class="modal-overlay " tabindex="-1" role="dialog">
-        <div class="modal-container" >
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 :style="estiloRojo" class="modal-title fs-5" id="eliminarUsuario">Error</h1>
-                    <button type="button" class="btn-close" @click="cerrarModal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>No puedes añadir productos al carrito si no tienes la sesión iniciada</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-cerrar" @click="cerrarModal">Cerrar</button>
+                    <button type="button" class="btn btn-cerrar" @click="cerrarModal">Cancelar</button>
+                    <button v-on:click="eliminarEntrada" type="button" class="anadir">Confirmar</button>
                 </div>     
             </div>
         </div>
@@ -170,51 +141,10 @@ function cerrarModal(){
         box-shadow: 0 10px 30px rgba(0,0,0,0.4);
     }
 
-    form{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 6% auto;
-        gap: 1rem;
-        width: 80%;
-    }
-
-    form input{
-        border: none;
-        padding: 0.5rem;
-        border-radius: 0.5rem;
-        border: 2px solid #fcbf00;
-    }
-
-    form input::placeholder{
-        color: #fcbf00;
-        font-style: italic;
-        opacity: 0.7;
-    }
-
-    form button{
-        display: flex;
-        align-items: center;
-        gap: 0.3rem;
-        background-color: #ff8800;
-        border: none;
-        border-radius: 0.5rem;
-        padding: 0.5rem 0.8rem;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        color: white;
-    }
-
-    form button:hover{
-        background-color: #fcbf00;
-        color: black;
-        transform: translateY(-0.125rem);
-    }
-
-    #todosProductos{
+    #todasEntradas{
         display: flex;
         flex-wrap: wrap;
+        margin-top: 4rem;
         margin-left: 2%;
         margin-bottom: 2%;
     }
@@ -233,6 +163,15 @@ function cerrarModal(){
         width: 100%;
         height: 200px;
         object-fit: cover;
+    }
+
+    .card-text{
+        margin: 0.3rem 0;
+        line-height: 1.4rem;
+        max-height: 4.5rem;
+        overflow: hidden;
+        position: relative;
+        padding-right: 1.2rem;
     }
 
     #valoracion{

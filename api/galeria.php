@@ -2,6 +2,8 @@
 //iniciamos la sesión
 session_start();
 
+header('Content-Type: application/json');
+
 // instaciamos la clase Database y hacemos la conexión a la base de datos
 $database = new Database();
 $db = $database->conexionBaseDeDatos();
@@ -20,6 +22,9 @@ switch($metodo){
     case 'DELETE':
         eliminarFoto($db);
         break;
+    default:
+        echo json_encode(['error' => 'Método no permitido']);
+        break;
 }
 
 //funcion para obtener todas las fotos
@@ -27,10 +32,13 @@ function obtenerTodasLasFotos($db){
 
     //declaramos un array para almacenar todas las fotos
     $lista_fotos = [];
+
     //sentencia try-catch para que nos indique que ha fallado la insercción (en caso de que se dé)
     try{
         //seleccionamos a todas las fotos de la tabla galeria
-        $stmt = $db->query('SELECT * FROM galeria');
+        $stmt = $db->prepare('SELECT * FROM galeria ORDER BY id DESC');
+        $stmt->execute();
+
         //mientras haya filas de datos, que se inserten en el array creado anteriormente
         while ($fila = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $lista_fotos[] = $fila;
@@ -48,7 +56,20 @@ function obtenerTodasLasFotos($db){
 function insertarNuevaFoto($db){
 
     // le realizamos las siguientes validaciones a la foto
+    if (!isset($_SESSION['usuario']['id'])) {
+        echo json_encode(['error' => 'El usuario no ha iniciado sesión']);
+        return;
+    }
+
+    $usuario_id = $_SESSION['usuario']['id'];
+
     if(!empty($_FILES['foto']['name'])){
+
+        if($_FILES['foto']['error'] !== UPLOAD_ERR_OK){
+            echo json_encode(['error' => 'Error al subir la imagen']);
+            return;
+        }
+
         //almacenamos el nombre de la imagen con la extensión
     	$nombre_foto = $_FILES['foto']['name'];
         //almacenamos el tipo de imagen (extensión)
@@ -63,18 +84,24 @@ function insertarNuevaFoto($db){
     	$extension_foto = strtolower(end($separar_foto));
         //extensiones de las imagenes permitidas
     	$extension = ["webp"];
-        //en caso de que la extensión de la foto sea idéntica a la extensión permitida
+
     	if(in_array($extension_foto, $extension) === true){
+
             //declaramos un array con el tipo MIME de archivo permitido
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $tipo_foto = finfo_file($finfo, $nombre_temporal_foto);
+            finfo_close($finfo);
+
     		$tipos = ["image/webp"];
+
             //en caso de que sean idénticas
     		if(in_array($tipo_foto, $tipos) === true){
                 //nos aseuramos que el tamaño de la foto sea menos de 2MB
     			if($tamano_foto <= 2000000){
                     //hasheamos el nombre de la imagen
-		    		$nuevo_nombre_foto = time().'-'.rand() . '.'.$extension_foto;
+		    		$nuevo_nombre_foto = time().'-'.bin2hex(random_bytes(8)) . '.'.$extension_foto;
                     //movemos la foto a la carpeta donde se almacenan todas
-		    		if(move_uploaded_file($nombre_temporal_foto,"../album/".$nuevo_nombre_foto)){
+		    		if(move_uploaded_file($nombre_temporal_foto,"album/".$nuevo_nombre_foto)){
 		    			$datos_formulario['foto'] = $nuevo_nombre_foto;
 		    		} else{
 		    			echo json_encode(['error' => 'No es posible subir la imagen']);
@@ -97,15 +124,6 @@ function insertarNuevaFoto($db){
         return;
     }
 
-    //obtenemos el id del usuario
-    $usuario_id = $_SESSION['usuario']['id'];
-
-    //comprobamos que hay un usuario logueado
-    if (!isset($_SESSION['usuario']['id'])) {
-        echo json_encode(['error' => 'El usuario no ha iniciado sesión']);
-        return;
-    }
-    
     //sentencia try-catch para que nos indique que ha fallado la insercción (en caso de que se dé)
     try{
         //hacemos inserción de datos con sentencia preparada
@@ -134,15 +152,14 @@ function eliminarFoto($db){
         return;
     }
 
-    //obtenemos el id del usuario
-    $usuario_id = $_SESSION['usuario']['id'];
-
-    //comprobamos que hay un usuario logueado
     if (!isset($_SESSION['usuario']['id'])) {
         echo json_encode(['error' => 'El usuario no ha iniciado sesión']);
         return;
     }
-    
+
+    //obtenemos el id del usuario
+    $usuario_id = $_SESSION['usuario']['id'];
+
     //sentencia try-catch para que nos indique que ha fallado la insercción (en caso de que se dé)
     try{
         //compobamos que la imagen pertenece al usuario
@@ -162,7 +179,7 @@ function eliminarFoto($db){
 
         //en caso de que sí sea la dueña de la imagen
         //obtenemos la ruta de la imagen
-        $ruta_imagen = "../album/" . $comprobar_foto['foto'];
+        $ruta_imagen = "album/" . $comprobar_foto['foto'];
 
         //en caso de que en la carpeta esté la imagen, la eliminamos de la carpeta
         if(file_exists($ruta_imagen)){
@@ -173,7 +190,8 @@ function eliminarFoto($db){
         $stmt = $db->prepare('DELETE FROM galeria WHERE id = :id AND usuario_id = :ud');
         $stmt->execute([
             ':id' => $data['id'],
-            ':ud' => $data['usuario_id']]);
+            ':ud' => $usuario_id
+        ]);
 
         echo json_encode(['success' => 'La foto ha sido eliminada con éxito']);
 

@@ -32,7 +32,7 @@ function obtenerTodasLasValoraciones($db){
     //sentencia try-catch para que nos indique que ha fallado la insercción (en caso de que se dé)
     try{
         //seleccionamos a todas las valoraciones
-        $stmt = $db->query('SELECT * FROM valoracion');
+        $stmt = $db->query('SELECT * FROM valoracion ORDER BY fecha_valoracion DESC');
         //mientras haya filas de datos, que se inserten en el array creado anteriormente
         while ($fila = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $lista_valoraciones[] = $fila;
@@ -52,13 +52,10 @@ function insertarNuevaValoracion($db){
     $data = json_decode(file_get_contents('php://input'), true);
 
     //comprobamos que nos llegue el id
-    if(empty($data['id'])){
+    if(empty($data['producto_id'])){
         echo json_encode(['error' => 'ID requerido']);
         return;
     }
-
-    //obtenemos el id del usuario
-    $usuario_id = $_SESSION['usuario']['id'];
 
     //comprobamos que hay un usuario logueado
     if (!isset($_SESSION['usuario']['id'])) {
@@ -66,8 +63,12 @@ function insertarNuevaValoracion($db){
         return;
     }
 
+    //obtenemos el id del usuario
+    $usuario_id = $_SESSION['usuario']['id'];
+    $cliente_usuario = $_SESSION['usuario']['usuario'];
+
     //comprobamos que el campo de puntuación no nos llegue vacío, y esté entre 1 y 5
-    if(empty($data['puntuacion']) || $data['puntuacion'] < 1 || $data['puntuacion'] > 5){
+    if(!isset($data['puntuacion']) || $data['puntuacion'] < 1 || $data['puntuacion'] > 5){
         echo json_encode(['error' => 'La puntuación no es válida']);
         return;
     }
@@ -79,8 +80,10 @@ function insertarNuevaValoracion($db){
 
     //comprobamos que no se haya realizado una valoración antes
     $stmt = $db->prepare('SELECT id FROM valoracion WHERE usuario_id = :ud AND producto_id = :pd');
-    $stmt->execute([':ud' => $usuario_id,
-        ':pd' => $data['id']]);
+    $stmt->execute([
+        ':ud' => $usuario_id,
+        ':pd' => $data['producto_id']
+    ]);
     
     if($stmt->fetch()){
         echo json_encode(['error' => 'Ya has valorado este producto']);
@@ -91,10 +94,13 @@ function insertarNuevaValoracion($db){
     try{
         //hacemos inserción de datos con sentencia preparada
         $stmt = $db->prepare('INSERT INTO valoracion
-            (usuario_id, producto_id, puntuacion, comentario) VALUES (:ud, :pd, :p, :c)');
+            (usuario_id, producto_id, cliente_usuario, puntuacion, comentario) 
+            VALUES (:ud, :pd, :cu, :p, :c)');
+            
         $stmt->execute(array(
             ':ud' => $usuario_id,
-            ':pd' => $data['id'],
+            ':pd' => $data['producto_id'],
+            ':cu' => $cliente_usuario,
             ':p' => $data['puntuacion'],
             ':c' => $data['comentario'])
         );
@@ -114,13 +120,10 @@ function actualizarValoracion($db){
     $data = json_decode(file_get_contents('php://input'), true);
 
     //comprobamos que nos llegue el id
-    if(empty($data['id'])){
+    if(empty($data['valoracion_id'])){
         echo json_encode(['error' => 'ID requerido']);
         return;
     }
-
-    //obtenemos el id del usuario
-    $usuario_id = $_SESSION['usuario']['id'];
 
     //comprobamos que hay un usuario logueado
     if (!isset($_SESSION['usuario']['id'])) {
@@ -128,35 +131,46 @@ function actualizarValoracion($db){
         return;
     }
 
+    //obtenemos el id del usuario
+    $usuario_id = $_SESSION['usuario']['id'];
+
     //sentencia try-catch para que nos indique que ha fallado la insercción (en caso de que se dé)
     try{
 
         //para actualizar la puntuación
-        if(!empty($data['puntuacion'])){ 
+        if(isset($data['puntuacion'])){ 
+
+            if($data['puntuacion'] < 1 || $data['puntuacion'] > 5){
+                echo json_encode(['error' => 'La puntuación no es válida']);
+                return;
+            }
+
             //actualizamos la puntuación
             $stmt = $db->prepare('UPDATE valoracion SET puntuacion = :pt WHERE id = :id AND usuario_id = :ud');
-            $stmt->execute([':pt' => $data['puntuacion'],
-                ':id' => $data['id'],
-                ':ud' => $usuario_id]);
-                
-            echo json_encode(['success' => 'La puntuación de la valoración ha sido actualizado con éxito']);
+            $stmt->execute([
+                ':pt' => $data['puntuacion'],
+                ':id' => $data['valoracion_id'],
+                ':ud' => $usuario_id
+            ]);
 
         }
 
         //para actualizar el texto
-        if(!empty($data['comentario'])){ 
+        if(isset($data['comentario'])){ 
             //actualizamos el comentario
             $stmt = $db->prepare('UPDATE valoracion SET comentario = :ct WHERE id = :id AND usuario_id = :ud');
-            $stmt->execute([':ct' => $data['comentario'],
-                ':id' => $data['id'],
-                ':ud' => $usuario_id]);
-                
-            echo json_encode(['success' => 'El comentario de la valoración ha sido actualizado con éxito']);
+            $stmt->execute([
+                ':ct' => $data['comentario'],
+                ':id' => $data['valoracion_id'],
+                ':ud' => $usuario_id
+            ]);
             
         }
 
+        echo json_encode(['success' => 'La valoración ha sido actualizado con éxito']);
+
     } catch (PDOException $e){
-        echo json_encode(['error' => 'Error al actualizar los datos de la valoración']);
+        echo json_encode(['error' => 'Error al actualizar la valoración']);
     }
 
 }
@@ -168,27 +182,28 @@ function eliminarValoracion($db){
     $data = json_decode(file_get_contents('php://input'), true);
 
     //comprobamos que nos llegue el id
-    if(empty($data['id'])){
+    if(empty($data['valoracion_id'])){
         echo json_encode(['error' => 'ID requerido']);
         return;
     }
-
-    //obtenemos el id del usuario
-    $usuario_id = $_SESSION['usuario']['id'];
 
     //comprobamos que hay un usuario logueado
     if (!isset($_SESSION['usuario']['id'])) {
         echo json_encode(['error' => 'El usuario no ha iniciado sesión']);
         return;
     }
+
+    //obtenemos el id del usuario
+    $usuario_id = $_SESSION['usuario']['id'];
     
     //sentencia try-catch para que nos indique que ha fallado la insercción (en caso de que se dé)
     try{
         //compobamos que la valoracion pertenece al usuario
         $stmt = $db->prepare('SELECT * FROM valoracion WHERE id = :id AND usuario_id = :ud');
         $stmt->execute([
-            ':id' => $data['id'],
-            ':ud' => $usuario_id]);
+            ':id' => $data['valoracion_id'],
+            ':ud' => $usuario_id
+        ]);
 
         //ejecutamos la sentencia sql
         $comprobar_valoracion = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -203,8 +218,9 @@ function eliminarValoracion($db){
         //eliminamos la valoracion de la base de datos
         $stmt = $db->prepare('DELETE FROM valoracion WHERE id = :id AND usuario_id = :ud');
         $stmt->execute([
-            ':id' => $data['id'],
-            ':ud' => $usuario_id]);
+            ':id' => $data['valoracion_id'],
+            ':ud' => $usuario_id
+        ]);
 
         echo json_encode(['success' => 'La valoración ha sido eliminada con éxito']);
 

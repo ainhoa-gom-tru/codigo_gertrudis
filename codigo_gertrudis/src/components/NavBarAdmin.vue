@@ -7,9 +7,11 @@ const usuarioLogueado = JSON.parse(localStorage.getItem('user') || 'null');
 
 //creamos una variable para almacenar el nombre y la imagen en caso de que hubiera de usuario logueado
 const nombreUsuario = ref('');
+const fotoUsuario = ref('');
 
 if(usuarioLogueado){
   nombreUsuario.value = usuarioLogueado.usuario;
+  fotoUsuario.value = usuarioLogueado.avatar;
 }
 
 </script>
@@ -18,22 +20,30 @@ if(usuarioLogueado){
     <aside>
         <div id="sidebar" class="nav-collapse ">
             <ul class="sidebar-menu" id="nav-accordion">
-                <RouterLink :to="`/panel-usuario/${nombreUsuario}`" v-slot="{ isActive }">
+                <p class="centered">
+                    <RouterLink to="/cambiar-avatar">
+                        <img :src="`/avatar/${fotoUsuario}`" class="img-circle" alt="Avatar de tu usuario">
+                    </RouterLink>
+                </p>
+                <RouterLink>
+                    <h5 class="centered">{{ nombreUsuario }}</h5>
+                </RouterLink>
+                <RouterLink to="/gestion-usuarios" v-slot="{ isActive }">
                     <li :class="{ active: isActive }">
-                        <i class="bi bi-person-badge-fill"></i>
-                        Datos personales
+                        <i class="bi bi-people-fill"></i>
+                        Gestión de usuarios
                     </li>
                 </RouterLink>
-                <RouterLink to="/pedidos" v-slot="{ isActive }">
+                <RouterLink to="/nuevo-producto" v-slot="{ isActive }">
                     <li :class="{ active: isActive }">
-                        <i class="bi bi-bag-check-fill"></i>
-                        Mis pedidos
+                        <i class="bi bi-bag-plus-fill"></i>
+                        Añadir de productos
                     </li>
                 </RouterLink>
-                <RouterLink to="/" v-slot="{ isActive }">
+                <RouterLink to="/gestion-productos" v-slot="{ isActive }">
                     <li :class="{ active: isActive }">
-                        <i class="bi bi-box-arrow-left"></i>
-                        Salir
+                        <i class="bi bi-kanban-fill"></i>
+                        Gestión de productos
                     </li>
                 </RouterLink>
             </ul>

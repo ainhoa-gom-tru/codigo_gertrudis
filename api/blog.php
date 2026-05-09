@@ -63,7 +63,9 @@ function insertarNuevoArticulo($db){
     }
 
     //comprobamos que los datos que nos llegan de categoría son los del enum
-    if($_POST['categoria'] !== 'música' || $_POST['categoria'] !== 'arte' || $_POST['categoria'] !== 'viajes' || $_POST['categoria'] !== 'moda'){
+    $categorias_validas = ['música', 'arte', 'viajes', 'moda'];
+
+    if(!in_array($_POST['categoria'], $categorias_validas)){
         echo json_encode(['error' => 'La categoría introducida no es válida']);
         return;
     }
@@ -95,7 +97,7 @@ function insertarNuevoArticulo($db){
                     //hasheamos el nombre de la imagen
 		    		$nuevo_nombre_foto = time().'-'.rand() . '.'.$extension_foto;
                     //movemos la foto a la carpeta donde se almacenan todas
-		    		if(move_uploaded_file($nombre_temporal_foto,"../album/".$nuevo_nombre_foto)){
+		    		if(move_uploaded_file($nombre_temporal_foto,"blog/".$nuevo_nombre_foto)){
 		    			$datos_formulario['foto'] = $nuevo_nombre_foto;
 		    		} else{
 		    			echo json_encode(['error' => 'No es posible subir la imagen']);
@@ -187,7 +189,7 @@ function eliminarArticulo($db){
 
         //en caso de que sí sea la dueña
         //obtenemos la ruta de la imagen
-        $ruta_imagen = "../blog/" . $comprobar_articulo['foto'];
+        $ruta_imagen = "blog/" . $comprobar_articulo['foto'];
 
         //en caso de que en la carpeta esté la imagen, la eliminamos de la carpeta
         if(file_exists($ruta_imagen)){
@@ -198,7 +200,7 @@ function eliminarArticulo($db){
         $stmt = $db->prepare('DELETE FROM blog WHERE id = :id AND usuario_id = :ud');
         $stmt->execute([
             ':id' => $data['id'],
-            ':ud' => $data['usuario_id']]);
+            ':ud' => $usuario_id]);
 
         echo json_encode(['success' => 'El artículo ha sido eliminado con éxito']);
 

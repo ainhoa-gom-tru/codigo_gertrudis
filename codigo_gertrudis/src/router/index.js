@@ -9,13 +9,20 @@ import Registrarse from '@/views/Registrarse.vue'
 import AnadirProducto from '@/views/Admin/AnadirProducto.vue'
 import DetallerUsuario from '@/views/Admin/DetallerUsuario.vue'
 import GestiónUsuarios from '@/views/Admin/GestiónUsuarios.vue'
-import EligeAvatar from '@/views/EligeAvatar.vue'
+import EligeAvatar from '@/views/Cliente/EligeAvatar.vue'
 import GestiónProductos from '@/views/Admin/GestiónProductos.vue'
 import PolíticasPrivacidad from '@/views/Políticas/PolíticasPrivacidad.vue'
 import PolíticasCookies from '@/views/Políticas/PolíticasCookies.vue'
 import TerminosCondiciones from '@/views/Políticas/TerminosCondiciones.vue'
-import Carrito from '@/views/Carrito.vue'
-import PasarelaPago from '@/views/PasarelaPago.vue'
+import Carrito from '@/views/Cliente/Carrito.vue'
+import PasarelaPago from '@/views/Cliente/PasarelaPago.vue'
+import PanelUsuario from '@/views/Cliente/PanelUsuario.vue'
+import Pedidos from '@/views/Cliente/Pedidos.vue'
+import Galeria from '@/views/Compis/Galeria.vue'
+import AnadirBlog from '@/views/Compis/AnadirBlog.vue'
+import Blog from '@/views/Cliente/Blog.vue'
+import DetallesEntrada from '@/views/Cliente/DetallesEntrada.vue'
+import DetallesProductos from '@/views/DetallesProductos.vue'
 
 const routes = [
   {
@@ -87,6 +94,11 @@ const router = createRouter({
       component: AnadirProducto
     },
     {
+      path: '/detalles-producto/:nombre',
+      name: 'detalles del producto',
+      component: DetallesProductos
+    },
+    {
       path: '/gestion-productos',
       name: 'gestion de productos',
       component: GestiónProductos
@@ -100,6 +112,36 @@ const router = createRouter({
       path: '/pasarela-pago',
       name: 'pasarela de pago',
       component: PasarelaPago
+    },
+    {
+      path: '/panel-usuario/:usuario',
+      name: 'panel del usuario',
+      component: PanelUsuario
+    },
+    {
+      path: '/pedidos',
+      name: 'pedidos',
+      component: Pedidos
+    },
+    {
+      path: '/galeria',
+      name: 'galería de fotos',
+      component: Galeria
+    },
+    {
+      path: '/anadir-entrada-blog',
+      name: 'Añadir entrada de blog',
+      component: AnadirBlog
+    },
+    {
+      path: '/blog',
+      name: 'Blog',
+      component: Blog
+    },
+    {
+      path: '/detalles-entrada/:titulo',
+      name: 'detalles de la entrada de blog',
+      component: DetallesEntrada
     },
     {
       path: '/politicas-privacidad',

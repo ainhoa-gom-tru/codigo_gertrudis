@@ -3,6 +3,7 @@ import { computed, ref } from 'vue';
 import Footer from './components/Footer.vue';
 import Header from './components/Header.vue';
 import HeaderAdmin from './components/HeaderAdmin.vue';
+import NavBarAdmin from './components/NavBarAdmin.vue';
 import NavBar from './components/NavBar.vue';
 
 //obtenemos el usuario logueado del localstorage
@@ -33,7 +34,8 @@ const esAdmin = computed(() => {
   <HeaderAdmin v-if="esAdmin && !$route.meta.hideHeaderAdmin"></HeaderAdmin>
   <Header v-else></Header>
   <div id="layout">
-    <NavBar v-if="esAdmin && !$route.meta.hideNavBar"></NavBar>
+    <NavBarAdmin v-if="esAdmin && !$route.meta.hideNavBar"></NavBarAdmin>
+    <NavBar></NavBar>
     <main id="contenido">
       <RouterView :key="$route.params.nombre"></RouterView>
     </main>

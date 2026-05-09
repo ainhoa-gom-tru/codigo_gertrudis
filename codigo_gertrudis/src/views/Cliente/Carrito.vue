@@ -68,6 +68,7 @@ const totalCarrito = computed(() => {
 function eliminarProducto(){
     fetch(ApiUrl + '/carrito', {
         method: 'DELETE',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json'
         },

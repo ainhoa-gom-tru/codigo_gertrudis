@@ -1,6 +1,7 @@
 <script setup>
 import { ApiUrl, bordeNatural, bordeRojo, bordeVerde, estiloNatural, estiloRojo, estiloVerde } from '@/main';
 import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 //creamos las siguientes variables
 const numeroTarjeta = ref('');
@@ -9,6 +10,7 @@ const fechaVencimiento = ref('');
 const mostrarMensaje = ref(false);
 const mensaje = ref('');
 const mostrarModal = ref(false);
+const router = useRouter();
 
 //creamos las siguientes expresiones regulares para realizar las validaciones de los dadtos de la tarjeta
 const tarjetaRegex = /^[0-9]{16}$/;
@@ -50,6 +52,14 @@ const validarFecha = computed(() => {
 
 //funcion para simular el pago
 function confirmarPedido() {
+
+    //nos aseguramos que pase la validación
+    if (!validarTarjeta.value || !validarCvc.value || !validarFecha.value) {
+        mensaje.value = "Por favor, rellena correctamente todos los campos";
+        mostrarMensaje.value = true;
+        return;
+    }
+
     fetch(ApiUrl + '/pedidos', {
         method: 'POST',
         credentials: 'include',
@@ -83,7 +93,7 @@ function cerrarModal(){
 
 //hacemos una funcion para redirigirnos a la pagina de login
 function continuar(){
-    //router.push("/login")
+    router.push("/carrito")
 }
 
 </script>
@@ -104,7 +114,7 @@ function continuar(){
                         <i v-else-if="validarTarjeta !== null && !validarTarjeta" :style="estiloRojo" class="bi bi-x"></i>
                         <i v-else :style="estiloVerde" class="bi bi-check"></i>
                     </label>
-                    <input v-model="numeroTarjeta" :style="validarTarjeta === null ? bordeNatural: !validarTarjeta ? bordeRojo : bordeVerde" type="text" class="form-control" id="numeroTarjeta" aria-label="Número de la tarjeta" placeholder="Ej: 4242 4242 4242 4242">
+                    <input v-model="numeroTarjeta" :style="validarTarjeta === null ? bordeNatural: !validarTarjeta ? bordeRojo : bordeVerde" type="text" class="form-control" id="numeroTarjeta" aria-label="Número de la tarjeta" placeholder="Ej: 4242424242424242">
                     <p v-if="!validarTarjeta && validarTarjeta !== null" :style="estiloRojo">* No debe de haber espacios</p>
                 </div>
                 <div class="mb-2">
@@ -125,7 +135,7 @@ function continuar(){
                     <input v-model="fechaVencimiento" :style="validarFecha === null ? bordeNatural : !validarFecha ? bordeRojo : bordeVerde" type="text" class="form-control" id="fechaVencimiento" aria-label="Fecha de vencimiento" placeholder="Ej: 04/38">
                     <p v-if="validarFecha === false" :style="estiloRojo">* El formato de la fecha no es correcto</p>
                 </div>
-                <button type="submit" class="btn-pagar" @click="confirmarPedido">
+                <button type="submit" class="btn-pagar">
                     <i class="bi bi-wallet-fill"></i>
                     Pagar
                 </button>
@@ -144,7 +154,7 @@ function continuar(){
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-cerrar" aria-label="Botón para cerrar modal" @click="mostrarModal = false">Cerrar</button>
-                    <button type="button" class="btn btn-registro" aria-label="Botón para reealizar continuar" @click="continuar">Continuar</button>
+                    <button type="button" class="btn btn-registro" aria-label="Botón para continuar" @click="continuar">Continuar</button>
                 </div>
             </div>
         </div>
