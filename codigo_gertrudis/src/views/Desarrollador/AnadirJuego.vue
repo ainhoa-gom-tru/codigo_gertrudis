@@ -183,4 +183,148 @@ function anadirJueo(){
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+
+    #body{
+        display: flex;
+        margin-top: 2%;
+        gap: 2%;
+    }
+
+    main{
+        width: 90%;
+        margin: auto;
+        margin-top: 2%;
+    }
+
+    .mensaje {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 1.2rem 1.5rem;
+        border-radius: 1rem;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        margin-bottom: 1.5rem;
+    }
+
+    .mensaje.success {
+        background: linear-gradient(135deg, #1f9d74, #168a64);
+        color: #d1ffe9;
+    }
+
+    .mensaje.error {
+        background: linear-gradient(135deg, #8b2c2c, #6e1f1f);
+        color: #ffdede;
+    }
+
+    .mensaje i {
+        font-size: 1.5rem;
+        background: rgba(255,255,255,0.15);
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    .texto-mensaje {
+        margin: 0;
+        font-weight: 500;
+    }
+
+    .mensaje button {
+        position: absolute;
+        right: 1rem;
+        top: 1rem;
+        background: transparent;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        opacity: 0.7;
+        color: inherit;
+    }
+
+    form{
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    label{
+        font-weight: 600;
+    }
+
+    .input{
+        position: relative;
+        margin-top: 0.3rem;
+    }
+
+    .input i{
+        position: absolute;
+        top: 50%;
+        left: 0.6rem;
+        transform: translateY(-50%);
+        color: #fcbf00;
+        opacity: 0.7;
+    }
+
+    .input input{
+        width: 100%;
+        padding: 0.5rem 0.5rem 0.5rem 2rem;
+        border-radius: 0.5rem;
+        border: 1px solid #fcbf00;
+    }
+
+    input[type="file"]{
+        margin-top: 0.5rem;
+        padding: 0.4rem;
+    }
+
+    input::placeholder{
+        font-style: italic;
+        color: #fcbf00;
+        opacity: 0.6;
+    }
+
+    input:focus{
+        outline: none;
+        border-color: #ff8800;
+        box-shadow: 0 0 0 2px rgba(255,136,0,0.2);
+    }
+
+    p{
+        font-size: 0.85rem;
+        margin-top: 0.2rem;
+    }
+
+    #enviar{
+        width: 100%;
+        background-color: #fcbf00;
+        font-weight: bold;
+        border: none;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        color: black;
+        margin-top: 1rem;
+    }
+
+    #enviar:hover{
+        background-color: #ff8800;
+        transform: translateY(-0.125rem);
+        color: white;
+    }
+
+    #enviar:disabled{
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+</style>

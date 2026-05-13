@@ -162,4 +162,55 @@ if(usuarioLogueado.value){
         color: #ff8800;
     }
 
+    @media (max-width: 768px) {
+
+        #sidebar {
+            width: 4.5rem;
+            padding: 1rem 0.5rem;
+        }
+
+        .sidebar-menu {
+            width: 100%;
+        }
+
+        li {
+            justify-content: center;
+            padding: 0.8rem 0;
+            margin: 0.3rem 0;
+            font-size: 0;
+            line-height: 0;
+        }
+
+        li i {
+            font-size: 1.4rem;
+            margin: 0;
+            line-height: normal;
+        }
+
+        li a {
+            font-size: 0;
+            color: transparent;
+        }
+
+        li * {
+            font-size: 0;
+        }
+
+        li:hover {
+            transform: none;
+        }
+
+        h5.centered {
+            font-size: 0;
+            margin: 0;
+            height: 0;
+            overflow: hidden;
+        }
+
+        .centered img {
+            width: 3.5rem;
+            height: 3.5rem;
+        }
+    }
+
 </style>
