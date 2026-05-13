@@ -36,9 +36,9 @@ obtenerDetallesEntrada();
                 <i class="bi bi-arrow-left"></i>
                 Volver
             </RouterLink>
-            <h2>{{ entrada.titulo }}</h2>
             <div class="hero">
                 <img :src="`http://localhost:8001/blog/${entrada.foto}`">
+                <h2>{{ entrada.titulo }}</h2>
             </div>
             <div id="todasEntradas">
                 <h5 class="card-title">{{ entrada.categoria.charAt(0).toUpperCase() + entrada.categoria.slice(1) }}</h5>
@@ -49,6 +49,21 @@ obtenerDetallesEntrada();
 </template>
 
 <style scoped>
+
+    a {
+        color: #fcbf00;
+        text-decoration: none;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: 0.2s;
+        margin: 2rem 4rem;
+    }
+
+    a:hover {
+        transform: translateX(-4px);
+    }
 
     .hero{
         position: relative;
@@ -76,83 +91,54 @@ obtenerDetallesEntrada();
     }
 
     #todasEntradas{
-        display: flex;
-        flex-wrap: wrap;
-        margin-top: 4rem;
-        margin-left: 2%;
-        margin-bottom: 2%;
+        margin: 2rem 4rem;
     }
 
-    .card{
-        margin: 1%;
-        padding: 1rem;
-        border-radius: 2rem;
-        color: black;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-        border: none;
+    #todasEntradas h5{
+        margin-bottom: 1rem;
     }
 
-    .card img{
-        border-radius: 1.5rem;
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-    }
+    @media (max-width: 768px) {
 
-    .card-text{
-        margin: 0.3rem 0;
-        overflow: hidden;
-        position: relative;
-        padding-right: 1.2rem;
-    }
+        a {
+            margin: 4rem;
+            justify-content: center;
+            font-size: 1rem;
+        }
 
-    #valoracion{
-        display: flex;
-        align-items: center;
-        gap: 0.3rem;
-        background-color: white;
-        padding: 0rem 0.5rem;
-        border-radius: 0.8rem;
-        position: absolute;
-        top: 7%;
-        right: 9%;
-        font-weight: bold;
-        color: #fcbf00;
-        height: 2.5rem;
-    }
+        a:hover {
+            transform: none;
+        }
 
-    #valoracion p{
-        margin-top: 0.8rem;
-    }
+        .hero img {
+            height: 50vh;
+        }
 
-    #valoracion i{
-        margin-top: -0.3rem;
-    }
+        .hero h2 {
+            font-size: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            border-radius: 20px;
+            text-align: center;
+            width: 85%;
+        }
 
-    .card-title{
-        color: #ff8800;
-        font-weight: bold;
-    }
+        #todasEntradas {
+            margin: 2rem 1rem;
+        }
 
-    .card-text{
-        margin: 0.3rem 0;
-    }
+        #todasEntradas h5 {
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
 
-    .card button{
-        background-color: #fcbf00;
-        font-weight: bold;
-        border: none;
-        border-radius: 0.5rem;
-        padding: 0.5rem;
-        width: 100%;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
+        #todasEntradas p {
+            font-size: 0.95rem;
+            line-height: 1.6rem;
+            text-align: justify;
+            margin: 0rem 2rem;
+        }
 
-    .card button:hover{
-        background-color: #ff8800;
-        color: white;
-        transform: translateY(-0.125rem);
     }
 
 </style>

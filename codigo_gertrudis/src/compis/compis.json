@@ -3,6 +3,7 @@
         "nombre": "Lucía",
         "fondo": "fondoLucia.png",
         "foto": "lucia.png",
+        "firma": "firma_lucia.png",
         "color": "#e488b1",
         "galeria": [
             {
@@ -28,6 +29,7 @@
         "nombre": "Ainhoa",
         "fondo": "fondoAinhoa.png",
         "foto": "ainhoa.png",
+        "firma": "firma_ainhoa.png",
         "color": "#4eb2e5",
         "galeria": [
             {
@@ -53,6 +55,7 @@
         "nombre": "Nazaret",
         "fondo": "fondoNazaret.png",
         "foto": "nazaret.png",
+        "firma": "firma_nazaret.png",
         "color": "#90c369",
         "galeria": [
             {
@@ -78,6 +81,7 @@
         "nombre": "Alba",
         "fondo": "fondoAlba.png",
         "foto": "alba.png",
+        "firma": "firma_alba.png",
         "color": "#9c7097",
         "galeria": [
             {

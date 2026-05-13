@@ -1,4 +1,36 @@
 <script setup>
+import router from '@/router';
+import { ref } from 'vue';
+
+
+//recuperamos el usuario logueaod del local storage
+const usuarioLogueado = ref(JSON.parse(localStorage.getItem('user') || 'null'));
+
+//creamos una variable para almacenar el nombre y la imagen en caso de que hubiera de usuario logueado
+const nombreUsuario = ref('');
+const fotoUsuario = ref('');
+const rolUsuario = ref('');
+const usuarioValidado = ref(null);
+
+if (usuarioLogueado.value) {
+  nombreUsuario.value = usuarioLogueado.value.usuario;
+  fotoUsuario.value = usuarioLogueado.value.avatar;
+  rolUsuario.value = usuarioLogueado.value.rol;
+  usuarioValidado.value = usuarioLogueado.value.validado;
+}
+
+//funcion para cerrar sesion
+function cerrarSesion(){
+    localStorage.removeItem('user');
+    localStorage.clear();
+    usuarioLogueado.value = null;
+    nombreUsuario.value = '';
+    fotoUsuario.value = '';
+    rolUsuario.value = '';
+    usuarioValidado.value = null;
+    router.push("/");
+}
+
 </script>
 
 <template>
@@ -11,7 +43,7 @@
         </div>
         <div class="top-menu">
             <ul class="nav pull-right top-menu">
-                <button class="btn">
+                <button class="btn" @click="cerrarSesion">
                     <i class="bi bi-door-closed-fill"></i>
                     Cerrar sesión
                 </button>

@@ -1,6 +1,7 @@
 <script setup>
 import { ApiUrl, bordeNatural, bordeRojo, bordeVerde, estiloNatural, estiloRojo, estiloVerde } from '@/main';
 import { computed, ref } from 'vue';
+import { RouterLink } from 'vue-router';
 
 //creamos las siguientes variables
 const titulo = ref('');
@@ -138,6 +139,10 @@ function anadirEntradaBlog(){
 <template>
     <div id="body">
         <main>
+            <RouterLink to="blog">
+                <i class="bi bi-arrow-left"></i>
+                Volver
+            </RouterLink>
             <div v-if="mostrarMensaje" class="mensaje" :class="mensaje.includes('éxito') ? 'success' : 'error'">
                 <button @click="cerrarMensaje">X</button>
                 <i v-if="mensaje.includes('éxito')" class="bi bi-check2"></i>

@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Memorión</title>
+<style>
+
+@import url("https://fonts.googleapis.com/css2?family=Gelasio:ital,wght@0,400..700;1,400..700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+
+body {
+font-family: "Gelasio", serif;
+}
+table {
+margin: 2vh;
+}
+
+td {
+/*background-image: url("../imagen/reversoCartas.png");*/
+background-color: #fcbf00;
+background-size: cover;
+width: 8vw;
+height: 25vh;
+border-radius: 15px;
+}
+
+button {
+background: none;
+border: 2px solid #fcbf00;
+color: #fcbf00;
+font-weight: bold;
+padding: 1%;
+font-size: 100%;
+border-radius: 10px;
+}
+
+button:hover {
+background-color: #fcbf00;
+color: white;
+cursor: pointer;
+}
+
+</style>
+</head>
+<body>
+<button id="nuevaPartida">Nueva partida</button>
+<table>
+<tr>
+<td id="t1"></td>
+<td id="t2"></td>
+<td id="t3"></td>
+<td id="t4"></td>
+</tr>
+<tr>
+<td id="t5"></td>
+<td id="t6"></td>
+<td id="t7"></td>
+<td id="t8"></td>
+</tr>
+<tr>
+<td id="t9"></td>
+<td id="t10"></td>
+<td id="t11"></td>
+<td id="t12"></td>
+</tr>
+</table>
+</body>
+<script>
+//funcion para cargar una nueva partida
+document
+.getElementById("nuevaPartida")
+.addEventListener("click", function () {
+//ejecutamos la función de mezclar cartas
+mezclarCartas();
+//una vez mezcladas, podremos jugar
+encontrarParejas();
+});
+
+//hacemos un array de los numeros de las cartas
+let cartas = [
+"https://upload.wikimedia.org/wikipedia/en/a/aa/Bart_Simpson_200px.png",
+"https://upload.wikimedia.org/wikipedia/en/a/aa/Bart_Simpson_200px.png",
+"https://upload.wikimedia.org/wikipedia/en/a/aa/Bart_Simpson_200px.png",
+"https://upload.wikimedia.org/wikipedia/en/a/aa/Bart_Simpson_200px.png",
+"https://upload.wikimedia.org/wikipedia/en/a/aa/Bart_Simpson_200px.png",
+"https://upload.wikimedia.org/wikipedia/en/a/aa/Bart_Simpson_200px.png",
+"https://upload.wikimedia.org/wikipedia/en/a/aa/Bart_Simpson_200px.png",
+"https://upload.wikimedia.org/wikipedia/en/a/aa/Bart_Simpson_200px.png",
+"https://upload.wikimedia.org/wikipedia/en/a/aa/Bart_Simpson_200px.png",
+"https://upload.wikimedia.org/wikipedia/en/a/aa/Bart_Simpson_200px.png",
+"https://upload.wikimedia.org/wikipedia/en/a/aa/Bart_Simpson_200px.png",
+"https://upload.wikimedia.org/wikipedia/en/a/aa/Bart_Simpson_200px.png",
+];
+//variable para guardar la primera carta que pusalmos
+let primCarta = null;
+
+//hacemos una función para mezclar las cartas
+function mezclarCartas() {
+//recorremos las cartas del array
+for (let i = 0; i < cartas.length; i++) {
+//almacenamos en la j numeros de la longitud de la array
+let j = Math.floor(Math.random() * cartas.length);
+//mezclamos las cartas
+let mezclar = cartas[i];
+cartas[i] = cartas[j];
+cartas[j] = mezclar;
+}
+
+console.log(cartas);
+}
+
+//funcion para ir encontrando las parejas
+function encontrarParejas() {
+//bucle para rrecorrer los numeros de las cartas del id del html
+for (let k = 1; k < 13; k++) {
+//almacenamos en la variable carta
+let carta = document.getElementById("t" + k);
+
+//iniciamos la carta a 0 para cada nueva partida
+carta.innerHTML = "";
+
+//añadimos un evento click sobre la carta para ir encontrando las parejas
+carta.onclick = function () {
+//en caso de que este descubierta
+if (carta.innerHTML != "") {
+return;
+}
+
+//mostramos la imagen
+carta.innerHTML = `<img src="${cartas[k - 1]}" style="width:100%; height:100%; border-radius: 10px;">`;
+
+//almacenamos la primera carta pulsada
+if (primCarta == null) {
+primCarta = carta;
+//si no es la primera carta
+} else {
+//obtenemos el numero de la primera carta pulsada
+let primera = Number(primCarta.id.slice(1)) - 1;
+//obtenemos la segunda carta pulsada
+let segunda = k - 1;
+
+//en caso de que sean iguales
+if (cartas[primera] == cartas[segunda]) {
+//le cambiamos el color a la carta
+primCarta.style.backgroundColor = "red";
+carta.style.backgroundColor = "red";
+primCarta = null;
+//en caso de que no coindidan
+} else {
+setTimeout(() => {
+primCarta.innerHTML = "";
+carta.innerHTML = "";
+primCarta = null;
+}, 3000);
+}
+}
+};
+}
+}
+</script>
+</html>

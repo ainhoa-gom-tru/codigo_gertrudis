@@ -1,5 +1,6 @@
 <script setup>
 import { ApiUrl, estiloRojo, estiloVerde } from '@/main';
+import router from '@/router';
 import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
@@ -14,9 +15,11 @@ const usuarioLogueado = JSON.parse(localStorage.getItem('user') || 'null');
 
 //creamos una variable para almacenar el id en caso de que hubiera de usuario logueado
 const idUsuario = ref('');
+const rolUsuario = ref('');
 
 if(usuarioLogueado){
   idUsuario.value = usuarioLogueado.id;
+  rolUsuario.value = usuarioLogueado.rol;
 }
 
 //funcion para obtener todos los usuarios
@@ -63,13 +66,22 @@ function cerrarModal(){
     entradaEliminar.value = null;
 }
 
+//funcion para redirigir al usuario a la página de añadir entrada de blog
+function redirigir(){
+    router.push("/anadir-entrada-blog")
+}
+
 </script>
 
 <template>
     <div class="hero">
-        <img src="/fondo tienda.png">
+        <img src="/fondo_blog.png">
         <h2>Blog</h2>
     </div>
+    <button v-if="rolUsuario === 'compi'" @click="redirigir" class="add">
+        <i class="bi bi-file-earmark-plus-fill"></i>
+        Añadir entrada de blog
+    </button>
     <div id="todasEntradas">
         <div v-if="mostrarMensaje" class="mensaje" :class="mensaje.includes('éxito') ? 'success' : 'error'">
             <button @click="cerrarMensaje">X</button>
@@ -80,7 +92,7 @@ function cerrarModal(){
         <div v-for="entrada in entradas" class="card" style="width: 18rem;">
             <div>
                 <img :src="`http://localhost:8001/blog/${entrada.foto}`" class="card-img-top" alt="Foto de la entrada del blog">
-                <button v-if="entrada.usuario_id === idUsuario" class="btn-eliminar" @click="entradaEliminar = entrada.id">
+                <button v-if="entrada.usuario_id === idUsuario && rolUsuario === 'compi'" class="btn-eliminar" @click="entradaEliminar = entrada.id">
                     <i class="bi bi-trash-fill"></i>
                 </button>
             </div>
@@ -89,6 +101,7 @@ function cerrarModal(){
                 <p class="card-text">{{ entrada.texto }}</p>
                 <button>
                     <RouterLink :to="`/detalles-entrada/${entrada.titulo}`">
+                        <i class="bi bi-plus-lg"></i>
                         Leer más
                     </RouterLink>
                 </button>
@@ -149,6 +162,25 @@ function cerrarModal(){
         margin-bottom: 2%;
     }
 
+    .add{
+        background-color: #fcbf00;
+        font-weight: bold;
+        border: none;
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        width: 15rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: black;
+        margin: 4rem 0em 0rem 3rem;
+    }
+
+    .add:hover{
+        background-color: #ff8800;
+        transform: translateY(-0.125rem);
+        color: white;
+    }
+
     .card{
         margin: 1%;
         padding: 1rem;
@@ -156,6 +188,10 @@ function cerrarModal(){
         color: black;
         box-shadow: 0 10px 25px rgba(0,0,0,0.15);
         border: none;
+    }
+
+    .card > div{
+        position: relative;
     }
 
     .card img{
@@ -174,27 +210,8 @@ function cerrarModal(){
         padding-right: 1.2rem;
     }
 
-    #valoracion{
-        display: flex;
-        align-items: center;
-        gap: 0.3rem;
-        background-color: white;
-        padding: 0rem 0.5rem;
-        border-radius: 0.8rem;
-        position: absolute;
-        top: 7%;
-        right: 9%;
-        font-weight: bold;
-        color: #fcbf00;
-        height: 2.5rem;
-    }
-
-    #valoracion p{
-        margin-top: 0.8rem;
-    }
-
-    #valoracion i{
-        margin-top: -0.3rem;
+    .card-body button a{
+        text-decoration: none;
     }
 
     .card-title{
@@ -217,9 +234,16 @@ function cerrarModal(){
         transition: all 0.3s ease;
     }
 
+    .card button a{
+        color: black;
+    }
+
+    .card button a:hover{
+        color: white;
+    }
+
     .card button:hover{
         background-color: #ff8800;
-        color: white;
         transform: translateY(-0.125rem);
     }
 
@@ -274,6 +298,101 @@ function cerrarModal(){
         background-color: #fcbf00;
         color: black;
         transform: translateY(-0.125rem);
+    }
+
+    .anadir{
+        background-color: #fcbf00;
+        color: black;
+        font-weight: bold;
+        border: none;
+        border-radius: 0.5rem;
+        padding: 0.4rem 0.7rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .anadir:hover{
+        background-color: #ff8800;
+        color: white;
+        transform: translateY(-0.125rem);
+    }
+
+    .btn-eliminar{
+        position: absolute;
+        top: 0.8rem;
+        right: 0.8rem;
+        width: 1rem;
+        padding: 0.5rem 0.7rem;
+        border-radius: 50%;
+        color: white;
+        background: none;
+        border: none;
+        z-index: 10;
+        cursor: pointer;
+    }
+
+    .btn-eliminar:hover{
+        cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+
+        .hero img {
+            height: 50vh;
+        }
+
+        .hero h2 {
+            font-size: 1.8rem;
+            padding: 1.5rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        button {
+            width: 90%;
+            margin: 1rem auto;
+            display: block;
+        }
+
+        #todasEntradas {
+            margin: 2rem 1rem;
+            justify-content: center;
+        }
+
+        .card {
+            width: 100% !important;
+            margin: 0.8rem 0;
+        }
+
+        .card img {
+            height: 160px;
+        }
+
+        .card-text {
+            line-height: 1.4rem;
+            max-height: 4.5rem;
+            overflow: hidden;
+            position: relative;
+            padding-right: 1.2rem;
+        }
+
+        .card button {
+            width: 100%;
+        }
+
+        .modal-container {
+            width: 95%;
+            padding: 1rem;
+        }
+
+        .modal-footer {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .btn-cerrar, .anadir {
+            width: 100%;
+        }
     }
 
 </style>

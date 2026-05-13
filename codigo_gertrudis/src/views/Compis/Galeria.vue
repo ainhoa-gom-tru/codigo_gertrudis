@@ -99,12 +99,12 @@ function anadirFoto(){
         //vaciamos el formulario
         foto.value = null;
         extension.value = null;
+        obtenerTodasFotos();
     })
     .catch(error => console.error('Error:', error));
     activarModal.value = false;
     mostrarMensaje.value = true;
     mensaje.value = '¡Has añadido tu imagen con éxito!';
-    obtenerTodasFotos();
 }
 
 //function para eliminar una foto

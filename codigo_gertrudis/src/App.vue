@@ -31,11 +31,11 @@ const esAdmin = computed(() => {
 </script>
 
 <template>
-  <HeaderAdmin v-if="esAdmin && !$route.meta.hideHeaderAdmin"></HeaderAdmin>
-  <Header v-else></Header>
+  <HeaderAdmin v-if="!$route.meta.hideHeaderAdmin"></HeaderAdmin>
+  <Header v-if="!$route.meta.hideHeader"></Header>
   <div id="layout">
-    <NavBarAdmin v-if="esAdmin && !$route.meta.hideNavBar"></NavBarAdmin>
-    <NavBar></NavBar>
+    <NavBarAdmin v-if="!$route.meta.hideNavBarAdmin"></NavBarAdmin>
+    <NavBar v-if="!$route.meta.hideNavBar"></NavBar>
     <main id="contenido">
       <RouterView :key="$route.params.nombre"></RouterView>
     </main>

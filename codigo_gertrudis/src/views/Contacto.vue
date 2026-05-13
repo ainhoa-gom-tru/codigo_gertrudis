@@ -189,13 +189,13 @@ onMounted(() => {
 
     #ubicacion h4{
         text-align: left;
-        margin: 3rem 7rem;
+        margin: 3rem 5rem;
     }
 
     #ubicacion div{
         width: 95%;
         height: 60vh;
-        margin: -1rem 3rem;
+        margin: -1rem 2rem;
         padding: 1.2rem;
         border-radius: 1.5rem;
     }
@@ -248,6 +248,84 @@ onMounted(() => {
         justify-content: flex-end;
         padding-top: 5%;
         border-top: 1px solid #eee;
+    }
+
+    @media (max-width: 768px) {
+
+        img {
+            display: none;
+        }
+
+        #sugerencia {
+            padding: 1rem;
+            margin: 1rem 0;
+            gap: 1rem;
+        }
+
+        form, #mensaje {
+            width: 100%;
+            max-width: 100%;
+            padding: 1.2rem;
+            border-radius: 1rem;
+        }
+
+        .form-label {
+            font-size: 0.95rem;
+        }
+
+        .form-control, textarea {
+            font-size: 0.95rem;
+        }
+
+        textarea {
+            height: 14vh;
+            min-height: 6rem;
+        }
+
+        .btn {
+            padding: 0.7rem;
+            font-size: 0.95rem;
+        }
+
+        .btn:hover {
+            transform: none;
+        }
+
+        #ubicacion {
+            margin-bottom: 4rem;
+        }
+
+        #ubicacion h4 {
+            margin: 2rem;
+            text-align: center;
+            font-size: 1.4rem;
+        }
+
+        #ubicacion div {
+            width: 100%;
+            padding: 0.5rem;
+            margin: 0;
+        }
+
+        #map {
+            height: 55vh;
+            width: 100%;
+            border-radius: 0.8rem;
+        }
+
+        .modal-container {
+            width: 92%;
+            padding: 1rem;
+        }
+
+        .modal-body {
+            font-size: 1rem;
+        }
+
+        .modal-footer {
+            justify-content: center;
+        }
+
     }
     
 </style>

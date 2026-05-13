@@ -107,13 +107,6 @@ function registrarUsuario(){
             !validarUsuario.value || !validarEmail.value || !validarContrasena.value || !validarContrasenas.value){
         hayErrores.value = true;
         mensajeError.value = true;
-
-        //tras 5 segundos, dejamos de mostrar el mensaje de error
-        setTimeout(() => {
-            mensajeError.value = false;
-            hayErrores.value = false;
-        }, 4000);
-
         return;
     }
 
@@ -141,18 +134,10 @@ function registrarUsuario(){
             //si este este error quiere decir que ya existe un usuario con ese email
             if(data.error === 'Este usuario ya está registrado'){
                 existeEmail.value = true;
-                setTimeout(() => {
-                    existeEmail.value = false;
-                    hayErrores.value = false;
-                }, 4000);
             }
             //si existe este error quiere decir que ya existe un usuario con ese nombre de usuario
             if(data.error === 'El nombre de usuario ya existe'){
                 existeUsuario.value = true;
-                setTimeout(() => {
-                    existeUsuario.value = false;
-                    hayErrores.value = false;
-                }, 4000);
             }
             nombre.value = '';
             apellidos.value = '';
@@ -180,17 +165,23 @@ function continuar(){
     router.push("/login")
 }
 
+//función para cerrar el mensaje de error
+function cerrarMensaje(){
+    hayErrores.value = false;
+}
+
 </script>
 
 <template>
     <div id="fondo">
         <div id="formulario">
             <form @submit.prevent="registrarUsuario">
-                <div id="mensaje-error" v-if="hayErrores">
-                    <div></div>
-                    <p v-if="mensajeError">* Hay campos vacíos y/o incorrectos</p>
-                    <p v-if="existeEmail">* Este email ya está registrado</p>
-                    <p v-if="existeUsuario">* Este nombre de usuario ya está registrado</p>
+                <div v-if="hayErrores" class="mensaje">
+                    <button @click="cerrarMensaje">X</button>
+                    <i class="bi bi-x-octagon-fill"></i>
+                    <p v-if="mensajeError">Hay campos vacíos y/o incorrectos</p>
+                    <p v-if="existeEmail">Este email ya está registrado</p>
+                    <p v-if="existeUsuario">Este nombre de usuario ya está registrado</p>
                 </div>
                 <div class="mb-2">
                     <div id="nombreApellidos">
@@ -334,29 +325,45 @@ function continuar(){
         justify-content: center;
     }
 
-    #mensaje-error{
+    .mensaje {
+        position: relative;
         display: flex;
-        padding: 1%;
-        border-radius: 10px;
-        box-shadow: 5px 5px 5px 0px;
-        height: 7%;
-        margin-bottom: 3%;
         align-items: center;
+        gap: 0.8rem;
+        padding: 1.2rem 1.5rem;
+        border-radius: 1rem;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        margin-bottom: 1.5rem;
+        background: linear-gradient(135deg, #8b2c2c, #6e1f1f);
+        color: #ffdede;
     }
 
-    #mensaje-error div{
-        background-color: red;
-        width: 1.5%;
-        height: 80%;
-        border-radius: 3px;
-        margin-left: 1%;
-        margin-right: 1%;
-        margin-top: 0.5%;
+    .mensaje i {
+        font-size: 1.5rem;
+        background: rgba(255,255,255,0.15);
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
     }
 
-    #mensaje-error p{
-        color: red;
-        margin-top: 0;
+    .texto-mensaje {
+        margin: 0;
+        font-weight: 500;
+    }
+
+    .mensaje button {
+        position: absolute;
+        right: 1rem;
+        top: 1rem;
+        background: transparent;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        opacity: 0.7;
+        color: inherit;
     }
 
     #nombreApellidos{

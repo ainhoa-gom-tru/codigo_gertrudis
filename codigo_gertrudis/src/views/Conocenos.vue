@@ -72,4 +72,35 @@
         padding: 1.5rem;
     }
 
+    @media (max-width: 768px) {
+
+        .hero video {
+            height: 60vh;
+        }
+
+        .hero h2 {
+            font-size: 1.8rem;
+            padding: 1.5rem;
+            border-radius: 20px;
+            width: 80%;
+            text-align: center;
+        }
+
+        section {
+            flex-direction: column;
+            margin: 2rem 1.5rem;
+            text-align: center;
+        }
+
+        section img {
+            width: 100%;
+            max-width: 320px;
+        }
+
+        section p {
+            font-size: 1rem;
+            padding: 1rem 0;
+        }
+    }
+
 </style>

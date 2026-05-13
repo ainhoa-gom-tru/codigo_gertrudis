@@ -5,6 +5,7 @@ import { RouterLink } from 'vue-router';
 
 //crea las siguientes variables
 const productos = ref([]);
+const valoraciones = ref([]);
 const exito = ref(false);
 const error = ref(false);
 
@@ -62,6 +63,32 @@ function añadirCarrito(producto) {
     });
 }
 
+//function para obtener todas las valoraciones
+function obtenerTodasValoraciones(){
+    fetch(ApiUrl + '/valoraciones', {
+        method: 'GET',
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Valoraciones:', data)
+        valoraciones.value = data;
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+obtenerTodasValoraciones();
+
+//function para obtener la media de un producto
+function calcularMediaValoracion(producto_id){
+    const filtradas = valoraciones.value.filter(v => v.producto_id == producto_id);
+
+    if (filtradas.length === 0) return 0;
+
+    const suma = filtradas.reduce((acc, v) => acc + v.puntuacion, 0);
+
+    return (suma / filtradas.length).toFixed(1);
+}
+
 //hacemos una funcion para cerrar el modal
 function cerrarModal(){
     exito.value = false;
@@ -75,18 +102,6 @@ function cerrarModal(){
         <img src="/fondo tienda.png">
         <h2>Productos</h2>
     </div>
-    <form>
-        <div>
-            <input type="text" placeholder="Encuentra tu producto">
-        </div>
-        <div>
-            <input type="number" placeholder="1€" min="1">
-        </div>
-        <button>
-            <i class="fa fa-search" aria-hidden="true"></i>
-            Buscar
-        </button>
-    </form>
     <div id="todosProductos">
         <div v-for="producto in productos" class="card" style="width: 18rem;">
             <div>
@@ -94,7 +109,7 @@ function cerrarModal(){
                     <img :src="`http://localhost:8001/productos/${producto.foto}`" class="card-img-top" alt="Foto del producto">
                 </RouterLink>
                 <div id="valoracion">
-                    <p>4.5</p>
+                    <p>{{ calcularMediaValoracion(producto.id) }}</p>
                     <i class="bi bi-star-fill"></i>
                 </div>
             </div>
@@ -105,7 +120,10 @@ function cerrarModal(){
                 <p class="card-text">
                     {{ producto.precio.toString().replace('.', ',') }}€
                 </p>
-                <button @click="añadirCarrito(producto)">Añadir al carrito</button>
+                <button @click="añadirCarrito(producto)">
+                    <i class="bi bi-bag-plus-fill"></i>
+                    Añadir al carrito
+                </button>
             </div>
         </div>
     </div>
@@ -170,53 +188,12 @@ function cerrarModal(){
         box-shadow: 0 10px 30px rgba(0,0,0,0.4);
     }
 
-    form{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 6% auto;
-        gap: 1rem;
-        width: 80%;
-    }
-
-    form input{
-        border: none;
-        padding: 0.5rem;
-        border-radius: 0.5rem;
-        border: 2px solid #fcbf00;
-    }
-
-    form input::placeholder{
-        color: #fcbf00;
-        font-style: italic;
-        opacity: 0.7;
-    }
-
-    form button{
-        display: flex;
-        align-items: center;
-        gap: 0.3rem;
-        background-color: #ff8800;
-        border: none;
-        border-radius: 0.5rem;
-        padding: 0.5rem 0.8rem;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        color: white;
-    }
-
-    form button:hover{
-        background-color: #fcbf00;
-        color: black;
-        transform: translateY(-0.125rem);
-    }
-
     #todosProductos{
         display: flex;
         flex-wrap: wrap;
         margin-left: 2%;
         margin-bottom: 2%;
+        margin-top: 4rem;
     }
 
     .card{
@@ -263,6 +240,10 @@ function cerrarModal(){
         font-weight: bold;
     }
 
+    a {
+        text-decoration: none;
+    }
+
     .card-text{
         margin: 0.3rem 0;
     }
@@ -282,6 +263,10 @@ function cerrarModal(){
         background-color: #ff8800;
         color: white;
         transform: translateY(-0.125rem);
+    }
+
+    .card button i{
+        margin-right: 0.2rem;
     }
 
     .modal-overlay {

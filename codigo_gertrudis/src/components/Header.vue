@@ -6,21 +6,27 @@ import { RouterLink } from 'vue-router';
 const companeras = ["Lucía", "Ainhoa", "Nazaret", "Alba"];
 
 //recuperamos el usuario logueaod del local storage
-const usuarioLogueado = JSON.parse(localStorage.getItem('user') || 'null');
+const usuarioLogueado = ref(JSON.parse(localStorage.getItem('user') || 'null'));
 
 //creamos una variable para almacenar el nombre y la imagen en caso de que hubiera de usuario logueado
 const nombreUsuario = ref('');
 const fotoUsuario = ref('');
+const rolUsuario = ref('');
 
-if(usuarioLogueado){
-  nombreUsuario.value = usuarioLogueado.usuario;
-  fotoUsuario.value = usuarioLogueado.avatar;
+if (usuarioLogueado.value) {
+  nombreUsuario.value = usuarioLogueado.value.usuario;
+  fotoUsuario.value = usuarioLogueado.value.avatar;
+  rolUsuario.value = usuarioLogueado.value.rol;
 }
 
 //funcion para cerrar sesion
 function cerrarSesion(){
     localStorage.removeItem('user');
     localStorage.clear();
+    usuarioLogueado.value = null;
+    nombreUsuario.value = '';
+    fotoUsuario.value = '';
+    rolUsuario.value = '';
 }
 
 </script>
@@ -50,11 +56,17 @@ function cerrarSesion(){
                             </li>
                         </ul>
                     </li>
-                    <li class="nav-item">
-                        <RouterLink to="/contacto" class="nav-link">Contacto<span class="sr-only"></span></RouterLink>
+                    <li class="nav-item" v-if="rolUsuario ==='compi'">
+                        <RouterLink to="/galeria" class="nav-link">Galería<span class="sr-only"></span></RouterLink>
                     </li>
                     <li class="nav-item">
-                        <RouterLink to="/gestion-usuarios" class="nav-link">Gestión usuarios<span class="sr-only"></span></RouterLink>
+                        <RouterLink to="/juegos" class="nav-link">Juegos<span class="sr-only"></span></RouterLink>
+                    </li>
+                    <li class="nav-item">
+                        <RouterLink to="/blog" class="nav-link">Blog<span class="sr-only"></span></RouterLink>
+                    </li>
+                    <li class="nav-item">
+                        <RouterLink to="/contacto" class="nav-link">Contacto<span class="sr-only"></span></RouterLink>
                     </li>
                 </ul>
             </div>
@@ -70,7 +82,7 @@ function cerrarSesion(){
                     <RouterLink :to="`panel-usuario/${nombreUsuario}`">
                         <h5 class="centered">{{ nombreUsuario }}</h5>
                     </RouterLink>
-                    <RouterLink to="/carrito" id="carrito">
+                    <RouterLink to="/carrito" id="carrito" v-if="rolUsuario === 'cliente' || rolUsuario === 'compi'">
                         <i class="bi bi-cart-fill"></i>
                     </RouterLink>
                 </div>
@@ -96,37 +108,10 @@ function cerrarSesion(){
         width: 12vw;
     }
 
-    .d-flex{
-        margin-left: 3%;
-        margin-right: 3%;
-    }
-
-    .d-flex input{
-        border: 1px solid #fcbf00;
-        border-radius: 12px;
-        color: #fcbf00;
-    }
-
-    .d-flex input::placeholder{
-        color: #fcbf00;
-        opacity: 0.7;
-        font-style: italic;
-    }
-
-    .d-flex button{
-        background-color: #fcbf00;
-        border: none;
-        border-radius: 10px;
-        padding: 4%;
-        color: white;
-        font-weight: bold;
-        font-size: 105%;
-        transition: all 0.3s ease;
-    }
-
-    .d-flex button:hover {
-        background-color: #ff8800;
-        transform: translateY(-2px);
+    .collapse.navbar-collapse{
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
     }
 
     li .nav-link{
@@ -239,7 +224,7 @@ function cerrarSesion(){
 
     .cerrar-sesion{
         border: none;
-        background-color: #8b2c2c;
+        background-color: #ff8800;
         color: white;
         border-radius: 0px 0px 0px 30px;
         padding: 1rem;
@@ -255,6 +240,10 @@ function cerrarSesion(){
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+
+    .cerrar-sesion:hover{
+        background-color: #fcbf00;
     }
 
     .cerrar-sesion button{

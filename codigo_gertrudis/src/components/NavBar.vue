@@ -7,9 +7,11 @@ const usuarioLogueado = JSON.parse(localStorage.getItem('user') || 'null');
 
 //creamos una variable para almacenar el nombre y la imagen en caso de que hubiera de usuario logueado
 const nombreUsuario = ref('');
+const rolUsuario = ref('');
 
 if(usuarioLogueado){
   nombreUsuario.value = usuarioLogueado.usuario;
+  rolUsuario.value = usuarioLogueado.rol;
 }
 
 </script>
@@ -30,7 +32,19 @@ if(usuarioLogueado){
                         Mis pedidos
                     </li>
                 </RouterLink>
-                <RouterLink to="/" v-slot="{ isActive }">
+                <RouterLink v-if="rolUsuario === 'admin'" to="/gestion-usuarios" v-slot="{ isActive }">
+                    <li :class="{ active: isActive }">
+                        <i class="bi bi-box-arrow-left"></i>
+                        Salir
+                    </li>
+                </RouterLink>
+                <RouterLink v-else-if="rolUsuario === 'desarrollador'" to="/gestion-productos" v-slot="{ isActive }">
+                    <li :class="{ active: isActive }">
+                        <i class="bi bi-box-arrow-left"></i>
+                        Salir
+                    </li>
+                </RouterLink>
+                <RouterLink v-else to="/" v-slot="{ isActive }">
                     <li :class="{ active: isActive }">
                         <i class="bi bi-box-arrow-left"></i>
                         Salir

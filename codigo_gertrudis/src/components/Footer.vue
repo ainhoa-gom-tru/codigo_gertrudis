@@ -31,8 +31,12 @@ const companeras = ["Lucía", "Ainhoa", "Nazaret", "Alba"];
                 </span>
             </div>
             <div class="col">
+                <!--<a href="mailto:codigogestrudis@gmail.com"></a>-->
                 <i class="bi bi-envelope"></i>
-                <i class="bi bi-instagram"></i>
+                <a href="https://www.instagram.com/codigogertrudis">
+                    <i class="bi bi-instagram"></i>
+                </a>
+                <a href=""></a>
                 <i class="bi bi-youtube"></i>
             </div>
         </div>
@@ -120,6 +124,35 @@ const companeras = ["Lucía", "Ainhoa", "Nazaret", "Alba"];
         color: #ff8800;
         background-color: white;
         transform: translateY(-0.2rem) scale(1.1);
+    }
+
+    @media (max-width: 768px) {
+
+        .row {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 2.5rem;
+        }
+
+        .col {
+            width: 100%;
+            min-width: unset;
+        }
+
+        .logo img {
+            width: 8rem;
+        }
+
+        .col:last-child {
+            justify-content: center;
+        }
+
+        .col:last-child i {
+            margin-top: 0;
+            font-size: 1.8rem;
+        }
+
     }
 
 </style>

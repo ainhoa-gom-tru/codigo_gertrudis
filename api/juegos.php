@@ -109,7 +109,7 @@ function insertarNuevoJuego($db){
                         //hasheamos el nombre de la imagen
 		    			$nuevo_nombre_foto = time().'-'.rand() . '.'.$extension_foto;
                         //movemos la foto a la carpeta donde se almacenan todas
-		    			if(move_uploaded_file($nombre_temporal_foto,"../miniaturas/".$nuevo_nombre_foto)){
+		    			if(move_uploaded_file($nombre_temporal_foto,"miniaturas/".$nuevo_nombre_foto)){
 		    				$datos_formulario['foto'] = $nuevo_nombre_foto;
 		    			} else{
 		    				echo json_encode(['error' => 'No es posible subir la imagen']);
@@ -163,7 +163,7 @@ function insertarNuevoJuego($db){
                     //hasheamos el nombre del archivo
 		    		$nuevo_nombre_archivo = time().'-'.rand() . '.'.$extension_archivo;
                     //movemos el archivo a la carpeta donde se almacenan todos
-		    		if(move_uploaded_file($nombre_temporal,"../juegos/".$nuevo_nombre_archivo)){
+		    		if(move_uploaded_file($nombre_temporal,"juegos/".$nuevo_nombre_archivo)){
 		    			$datos_formulario['archivo'] = $nuevo_nombre_archivo;
 		    		} else{
 		    			echo json_encode(['error' => 'No es posible subir el archivo']);
@@ -217,6 +217,12 @@ function actualizarJuego($db){
         return;
     }
 
+    //comprobamos que nos llegue el nombre
+    if(empty($data['nombre'])){
+        echo json_encode(['error' => 'Nombre requerido']);
+        return;
+    }
+
     /** creamos una expresión regular para validar que sea un título y que la primera letra
      * sea mayúscula, puede tener espacios y tildes, no números ni caracteres especiales
     */
@@ -259,12 +265,25 @@ function eliminarJuego($db){
 
     //sentencia try-catch para que nos indique que ha fallado la insercción (en caso de que se dé)
     try{
+
+        $stmt = $db->prepare('SELECT foto, archivo FROM juego WHERE id = :id');
+        $stmt->execute([':id' => $data['id']]);
+        $comprobar_juego = $stmt->fetch(PDO::FETCH_ASSOC);
+
         //obtenemos la ruta de la imagen
-        $ruta_imagen = "../album/" . $comprobar_foto['foto'];
+        $ruta_imagen = "miniaturas/" . $comprobar_juego['foto'];
+
+        //obtenemos la ruta del archivo
+        $ruta_archivo = "juegos/" . $comprobar_juego['archivo'];
 
         //en caso de que en la carpeta esté la imagen, la eliminamos de la carpeta
         if(file_exists($ruta_imagen)){
             unlink($ruta_imagen);
+        }
+
+        //en caso de que en la carpeta esté el archivo, lo eliminamos de la carpeta
+        if(file_exists($ruta_archivo)){
+            unlink($ruta_archivo);
         }
         
         //eliminamos el juego con el id que nos llega

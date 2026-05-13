@@ -1,5 +1,5 @@
 <script setup>
-import { ApiUrl } from '@/main';
+import { ApiUrl, estiloRojo, estiloVerde } from '@/main';
 import router from '@/router';
 import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
@@ -11,6 +11,7 @@ const contrasena = ref('');
 const mostrarContrasena = ref(false);
 const hayErrores = ref(false);
 const mensajeError = ref(false);
+const mostrarModal = ref(false);
 
 //funcion para mostrar la contraseña
 function mostrarLaContrasena() {
@@ -33,16 +34,6 @@ function iniciarSesion(){
     if(usuarioEmail.value === '' || contrasena.value === '' || !validarEmailUsuario.value){
         hayErrores.value = true;
         mensajeError.value = true;
-
-        //tras 5 segundos, dejamos de mostrar el mensaje de error
-        setTimeout(() => {
-            mensajeError.value = false;
-            hayErrores.value = false;
-        }, 4000);
-
-        usuarioEmail.value = '';
-        contrasena.value = '';
-
         return;
     }
 
@@ -68,23 +59,42 @@ function iniciarSesion(){
     .then(response => response.json())
     .then(data => {
         if (data.id) {
+            console.log("ROL RAW:", `"${data.rol}"`);
             console.log('Ha iniciado sesión:', data);
-            //si está marcado la casilla de recordar, lo almacenamos en localstorage
-            if(recordar.value){
-                localStorage.setItem('user', JSON.stringify(data));
+            localStorage.setItem('user', JSON.stringify(data));
+            usuarioEmail.value = "";
+            contrasena.value = "";
+            recordar.value = false;
+            //obtenemos el rol del usuario que está haciendo login y si está validado o no
+            const rolPermitido = data.rol === "admin" || data.rol === "desarrollador";
+            const estaValidado = data.validado == 1;
+            //redigirigimos en función del rol y la validez
+            if (rolPermitido && estaValidado) {
+                if (data.rol === "admin") {
+                    router.push("/gestion-usuarios");
+                } else {
+                    router.push("/gestion-juegos");
+                }
             } else {
-                localStorage.removeItem('user');
+                //mostrarmos el modal en caso de que no esté validado
+                if (estaValidado){
+                    router.push("/");
+                } else {
+                    mostrarModal.value = true;
+                }
             }
-        usuarioEmail.value = "";
-        contrasena.value = "";
-        recordar.value = false;
-        router.push("/");
         } else {
             console.log('Error al iniciar sesión:', data.error);
+            hayErrores.value = true;
         }
     })
     .catch(error => console.error('Error:', error));
 
+}
+
+//funcion parar cerrar el mensaje de error
+function cerrarModal(){
+    hayErrores.value = false;
 }
 
 </script>
@@ -96,6 +106,11 @@ function iniciarSesion(){
                 <div id="mensaje-error" v-if="hayErrores">
                     <div></div>
                     <p v-if="mensajeError">* Hay campos vacíos y/o incorrectos</p>
+                </div>
+                <div v-if="hayErrores" class="mensaje">
+                    <button @click="cerrarMensaje">X</button>
+                    <i class="bi bi-x-octagon-fill"></i>
+                    <p>Hay campos vacíos y/o incorrectos</p>
                 </div>
                 <div class="mb-2">
                     <label for="usuarioEmail" class="form-label" aria-label="Correo electrónico o usuario">Correo electrónico o usuario *</label>
@@ -132,6 +147,22 @@ function iniciarSesion(){
             </video>
         </div>
     </div>
+    <div v-if="mostrarModal" class="modal-overlay"  tabindex="-1" role="dialog">
+        <div class="modal-container">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" :style="estiloRojo">Cuenta no validada</h5>
+                    <button type="button" class="btn-close" @click="mostrarModal = false" aria-label="Cerrar modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tu cuenta será validad en las próximas 24 horas</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-cerrar" aria-label="Botón para iniciar sesión" @click="router.push('/')">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <style scoped>
@@ -166,29 +197,45 @@ function iniciarSesion(){
         color: #ff8800;
     }
 
-    #mensaje-error{
+    .mensaje {
+        position: relative;
         display: flex;
-        padding: 1%;
-        border-radius: 10px;
-        box-shadow: 5px 5px 5px 0px;
-        height: 7%;
-        margin-bottom: 3%;
         align-items: center;
+        gap: 0.8rem;
+        padding: 1.2rem 1.5rem;
+        border-radius: 1rem;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        margin-bottom: 1.5rem;
+        background: linear-gradient(135deg, #8b2c2c, #6e1f1f);
+        color: #ffdede;
     }
 
-    #mensaje-error div{
-        background-color: red;
-        width: 1.5%;
-        height: 80%;
-        border-radius: 3px;
-        margin-left: 1%;
-        margin-right: 1%;
-        margin-top: 0.5%;
+    .mensaje i {
+        font-size: 1.5rem;
+        background: rgba(255,255,255,0.15);
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
     }
 
-    #mensaje-error p{
-        color: red;
-        margin-top: 3%;
+    .texto-mensaje {
+        margin: 0;
+        font-weight: 500;
+    }
+
+    .mensaje button {
+        position: absolute;
+        right: 1rem;
+        top: 1rem;
+        background: transparent;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        opacity: 0.7;
+        color: inherit;
     }
 
     input{
@@ -258,6 +305,64 @@ function iniciarSesion(){
     video{
         width: 50%;
         object-fit: cover;
+    }
+
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .modal-container {
+        background: white;
+        width: 400px;
+        border-radius: 14px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        animation: aparecer 0.2s ease-out;
+        padding: 2%;
+    }
+
+    .modal-content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .modal-header {
+        padding-bottom: 5%;
+        border-bottom: 1px solid #eee;
+    }
+
+    .modal-body {
+        padding: 5% 0%;
+        font-size: 110%;
+    }
+
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        padding-top: 5%;
+        border-top: 1px solid #eee;
+    }
+
+    .btn-cerrar {
+        margin-top: 2%;
+        background-color: #ff8800;
+        color: black;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        margin-right: 5%;
+    }
+
+    .btn-cerrar:hover{
+        background-color: #fcbf00;
+        transform: translateY(-2px);
     }
 
     @media (max-width: 768px) {

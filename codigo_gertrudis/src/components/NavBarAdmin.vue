@@ -3,15 +3,17 @@ import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
 //recuperamos el usuario logueaod del local storage
-const usuarioLogueado = JSON.parse(localStorage.getItem('user') || 'null');
+const usuarioLogueado = ref(JSON.parse(localStorage.getItem('user') || 'null'));
 
 //creamos una variable para almacenar el nombre y la imagen en caso de que hubiera de usuario logueado
 const nombreUsuario = ref('');
 const fotoUsuario = ref('');
+const rolUsuario = ref('');
 
-if(usuarioLogueado){
-  nombreUsuario.value = usuarioLogueado.usuario;
-  fotoUsuario.value = usuarioLogueado.avatar;
+if(usuarioLogueado.value){
+  nombreUsuario.value = usuarioLogueado.value.usuario;
+  fotoUsuario.value = usuarioLogueado.value.avatar;
+  rolUsuario.value = usuarioLogueado.value.rol;
 }
 
 </script>
@@ -25,25 +27,37 @@ if(usuarioLogueado){
                         <img :src="`/avatar/${fotoUsuario}`" class="img-circle" alt="Avatar de tu usuario">
                     </RouterLink>
                 </p>
-                <RouterLink>
+                <RouterLink :to="`panel-usuario/${nombreUsuario}`">
                     <h5 class="centered">{{ nombreUsuario }}</h5>
                 </RouterLink>
-                <RouterLink to="/gestion-usuarios" v-slot="{ isActive }">
+                <RouterLink v-if="rolUsuario === 'admin'" to="/gestion-usuarios" v-slot="{ isActive }">
                     <li :class="{ active: isActive }">
                         <i class="bi bi-people-fill"></i>
                         Gestión de usuarios
                     </li>
                 </RouterLink>
-                <RouterLink to="/nuevo-producto" v-slot="{ isActive }">
+                <RouterLink v-if="rolUsuario === 'admin'" to="/nuevo-producto" v-slot="{ isActive }">
                     <li :class="{ active: isActive }">
                         <i class="bi bi-bag-plus-fill"></i>
                         Añadir de productos
                     </li>
                 </RouterLink>
-                <RouterLink to="/gestion-productos" v-slot="{ isActive }">
+                <RouterLink v-if="rolUsuario === 'admin'" to="/gestion-productos" v-slot="{ isActive }">
                     <li :class="{ active: isActive }">
                         <i class="bi bi-kanban-fill"></i>
                         Gestión de productos
+                    </li>
+                </RouterLink>
+                <RouterLink v-if="rolUsuario === 'desarrollador'" to="/gestion-juegos" v-slot="{ isActive }">
+                    <li :class="{ active: isActive }">
+                        <i class="bi bi-kanban-fill"></i>
+                        Gestión de juegos
+                    </li>
+                </RouterLink>
+                <RouterLink v-if="rolUsuario === 'desarrollador'" to="/anadir-juego" v-slot="{ isActive }">
+                    <li :class="{ active: isActive }">
+                        <i class="bi bi-joystick"></i>
+                        Añadir de juegos
                     </li>
                 </RouterLink>
             </ul>
