@@ -322,4 +322,58 @@ function cerrarModal(){
         transform: translateY(-0.125rem);
     }
 
+    @media (max-width: 768px) {
+
+        .hero img {
+            height: 40vh;
+        }
+
+        .hero h2 {
+            font-size: 1.8rem;
+            padding: 1.2rem;
+            border-radius: 20px;
+            width: 90%;
+            text-align: center;
+        }
+
+        #todosProductos {
+            margin: 2rem 1rem;
+            justify-content: center;
+        }
+
+        .card {
+            width: 100% !important;
+            margin: 0.5rem 0;
+        }
+
+        .card img {
+            height: 160px;
+        }
+
+        #valoracion {
+            top: 6%;
+            right: 6%;
+            height: 2rem;
+            font-size: 0.85rem;
+            padding: 0 0.4rem;
+        }
+
+        #valoracion p {
+            margin-top: 0.4rem;
+        }
+
+        .card-title {
+            font-size: 1rem;
+        }
+
+        .card-text {
+            font-size: 0.9rem;
+        }
+
+        .card button {
+            font-size: 0.9rem;
+            padding: 0.6rem;
+        }
+    }
+
 </style>

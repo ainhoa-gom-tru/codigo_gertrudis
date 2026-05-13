@@ -218,6 +218,21 @@ function anadirEntradaBlog(){
         margin-top: 2%;
     }
 
+    main a {
+        color: #fcbf00;
+        text-decoration: none;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: 0.2s;
+        margin: 2rem 0rem;
+    }
+
+    main a:hover {
+        transform: translateX(-4px);
+    }
+
     .mensaje {
         position: relative;
         display: flex;

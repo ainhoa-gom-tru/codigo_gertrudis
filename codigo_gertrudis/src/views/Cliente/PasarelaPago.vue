@@ -154,7 +154,7 @@ function continuar(){
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-cerrar" aria-label="Botón para cerrar modal" @click="mostrarModal = false">Cerrar</button>
-                    <button type="button" class="btn btn-registro" aria-label="Botón para continuar" @click="continuar">Continuar</button>
+                    <button type="button" class="btn btn-pagar" aria-label="Botón para continuar" @click="continuar">Continuar</button>
                 </div>
             </div>
         </div>

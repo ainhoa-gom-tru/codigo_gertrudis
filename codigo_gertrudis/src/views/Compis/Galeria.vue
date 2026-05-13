@@ -197,7 +197,7 @@ function cerrarMensaje(){
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-cerrar" @click="cerrarModal">Cancelar</button>
-                        <button v-on:click="eliminarFoto" type="button" class="anadir">Confirmar</button>
+                        <button v-on:click="eliminarFoto" type="button" class="delete">Confirmar</button>
                     </div>     
                 </div>
             </div>
@@ -278,6 +278,10 @@ function cerrarMensaje(){
         display: flex;
     }
 
+    .anadir i { 
+        margin-right: 0.4rem;
+    }
+
     .anadir:hover{
         background-color: #ff8800;
         transform: translateY(-0.125rem);
@@ -285,40 +289,61 @@ function cerrarMensaje(){
     }
 
     .galeria {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 1rem;
-    padding: 1rem;
-    margin-top: 1.5rem;
-}
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 1rem;
+        padding: 1rem;
+        margin-top: 1.5rem;
+    }
 
-.galeria div {
-    position: relative;
-    overflow: hidden;
-    border-radius: 0.75rem;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    background: #f5f5f5;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+    .galeria div {
+        position: relative;
+        overflow: hidden;
+        border-radius: 0.75rem;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        background: #f5f5f5;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-.galeria div:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(0,0,0,0.25);
-    cursor: pointer;
-}
+    .galeria div:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(0,0,0,0.25);
+        cursor: pointer;
+    }
 
-.galeria img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.4s ease, filter 0.3s ease;
-}
+    .galeria img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.4s ease, filter 0.3s ease;
+    }
 
-.galeria div:hover img {
-    transform: scale(1.05);
-    filter: brightness(0.9);
-}
+    .galeria div:hover img {
+        transform: scale(1.05);
+        filter: brightness(0.9);
+    }
+
+    .btn-eliminar{
+        position: absolute;
+        top: 0.6rem;
+        right: 1.4rem;
+        width: 1rem;
+        padding: 0.5rem 0.7rem;
+        border-radius: 50%;
+        color: white;
+        background: none;
+        border: none;
+        z-index: 10;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-eliminar:hover{
+        cursor: pointer;
+        transform: translateY(-0.125rem);
+        color: #ff8800;
+    }
 
     #enviar{
         width: 100%;
@@ -398,6 +423,90 @@ function cerrarMensaje(){
         background-color: #fcbf00;
         color: black;
         transform: translateY(-0.125rem);
+    }
+
+    .delete{
+        background-color: #fcbf00;
+        color: black;
+        font-weight: bold;
+        border: none;
+        border-radius: 0.5rem;
+        padding: 0.4rem 0.7rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .delete:hover{
+        background-color: #ff8800;
+        color: white;
+        transform: translateY(-0.125rem);
+    }
+
+    @media (max-width: 768px) {
+
+        main {
+            margin-top: 4rem;
+        }
+
+        .mensaje {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+            padding: 1rem;
+        }
+
+        .mensaje button {
+            top: 0.5rem;
+            right: 0.5rem;
+        }
+
+        .anadir {
+            width: 100%;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .galeria {
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 0.8rem;
+            padding: 0.5rem;
+        }
+
+        .galeria img {
+            height: 140px;
+        }
+
+        .galeria div:hover {
+            transform: none;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .galeria div:hover img {
+            transform: none;
+        }
+
+        .btn-eliminar {
+            top: 0.4rem;
+            right: 0.8rem;
+        }
+
+        .modal-container {
+            width: 92%;
+            padding: 1rem;
+        }
+
+        .modal-footer {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .btn-cerrar, .delete {
+            width: 100%;
+        }
+
+        #enviar {
+            width: 100%;
+        }
     }
 
 </style>

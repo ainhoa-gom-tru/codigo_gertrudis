@@ -120,13 +120,13 @@ const router = createRouter({
     {
       path: '/carrito',
       name: 'carrito',
-      meta: { requiresAuth: true},
+      meta: { hideNavBarAdmin: true, hideHeaderAdmin: true, hideHeader: true, hideFooter: true, requiresAuth: true},
       component: Carrito
     },
     {
       path: '/pasarela-pago',
       name: 'pasarela de pago',
-      meta: { requiresAuth: true},
+      meta: { hideNavBar: true, hideHeader: true, hideFooter: true, hideNavBarAdmin: true, hideHeaderAdmin: true, requiresAuth: true},
       component: PasarelaPago
     },
     {

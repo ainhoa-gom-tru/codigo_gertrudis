@@ -61,9 +61,9 @@ function eliminarEntrada(){
     .catch(error => console.error('Error:', error));
 }
 
-//function para cerrar el modal
-function cerrarModal(){
-    entradaEliminar.value = null;
+//funcion para cerrar el mensaje
+function cerrarMensaje(){
+    mostrarMensaje.value = false;
 }
 
 //funcion para redirigir al usuario a la página de añadir entrada de blog
@@ -82,13 +82,13 @@ function redirigir(){
         <i class="bi bi-file-earmark-plus-fill"></i>
         Añadir entrada de blog
     </button>
+    <div v-if="mostrarMensaje" class="mensaje" :class="mensaje.includes('éxito') ? 'success' : 'error'">
+        <button @click="cerrarMensaje">X</button>
+        <i v-if="mensaje.includes('éxito')" class="bi bi-check2"></i>
+        <i v-else class="bi bi-x-octagon-fill"></i>
+        <p class="texto-mensaje">{{ mensaje }}</p>
+    </div>
     <div id="todasEntradas">
-        <div v-if="mostrarMensaje" class="mensaje" :class="mensaje.includes('éxito') ? 'success' : 'error'">
-            <button @click="cerrarMensaje">X</button>
-            <i v-if="mensaje.includes('éxito')" class="bi bi-check2"></i>
-            <i v-else class="bi bi-x-octagon-fill"></i>
-            <p class="texto-mensaje">{{ mensaje }}</p>
-        </div>
         <div v-for="entrada in entradas" class="card" style="width: 18rem;">
             <div>
                 <img :src="`http://localhost:8001/blog/${entrada.foto}`" class="card-img-top" alt="Foto de la entrada del blog">
@@ -99,7 +99,7 @@ function redirigir(){
             <div class="card-body">
                 <h5 class="card-title">{{ entrada.titulo }}</h5>
                 <p class="card-text">{{ entrada.texto }}</p>
-                <button>
+                <button class="btn-leer-mas">
                     <RouterLink :to="`/detalles-entrada/${entrada.titulo}`">
                         <i class="bi bi-plus-lg"></i>
                         Leer más
@@ -152,6 +152,55 @@ function redirigir(){
         padding: 3rem;
         border-radius: 40px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+
+    .mensaje {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 1.2rem 1.5rem;
+        border-radius: 1rem;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        margin: 3rem;
+    }
+
+    .mensaje.success {
+        background: linear-gradient(135deg, #1f9d74, #168a64);
+        color: #d1ffe9;
+    }
+
+    .mensaje.error {
+        background: linear-gradient(135deg, #8b2c2c, #6e1f1f);
+        color: #ffdede;
+    }
+
+    .mensaje i {
+        font-size: 1.5rem;
+        background: rgba(255,255,255,0.15);
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    .texto-mensaje {
+        margin: 0;
+        font-weight: 500;
+    }
+
+    .mensaje button {
+        position: absolute;
+        right: 1rem;
+        top: 1rem;
+        background: transparent;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        opacity: 0.7;
+        color: inherit;
     }
 
     #todasEntradas{
@@ -210,7 +259,7 @@ function redirigir(){
         padding-right: 1.2rem;
     }
 
-    .card-body button a{
+    .card-body btn-leer-mas a{
         text-decoration: none;
     }
 
@@ -223,7 +272,7 @@ function redirigir(){
         margin: 0.3rem 0;
     }
 
-    .card button{
+    .card .btn-leer-mas{
         background-color: #fcbf00;
         font-weight: bold;
         border: none;
@@ -234,15 +283,27 @@ function redirigir(){
         transition: all 0.3s ease;
     }
 
-    .card button a{
+    .card .btn-leer-mas{
+        background-color: #fcbf00;
+        font-weight: bold;
+        border: none;
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        width: 100%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .card .btn-leer-mas a{
+        text-decoration: none;
         color: black;
     }
 
-    .card button a:hover{
+    .card .btn-leer-mas a:hover{
         color: white;
     }
 
-    .card button:hover{
+    .card .btn-leer-mas:hover{
         background-color: #ff8800;
         transform: translateY(-0.125rem);
     }
@@ -319,8 +380,8 @@ function redirigir(){
 
     .btn-eliminar{
         position: absolute;
-        top: 0.8rem;
-        right: 0.8rem;
+        top: 0.6rem;
+        right: 1.4rem;
         width: 1rem;
         padding: 0.5rem 0.7rem;
         border-radius: 50%;
@@ -329,16 +390,20 @@ function redirigir(){
         border: none;
         z-index: 10;
         cursor: pointer;
+        transition: all 0.3s ease;
     }
 
     .btn-eliminar:hover{
         cursor: pointer;
+        transform: translateY(-0.125rem);
+        color: #ff8800;
     }
 
     @media (max-width: 768px) {
 
         .hero img {
             height: 50vh;
+            margin-top: 4rem;
         }
 
         .hero h2 {
@@ -392,6 +457,11 @@ function redirigir(){
 
         .btn-cerrar, .anadir {
             width: 100%;
+        }
+
+        .btn-eliminar{
+            right: -16rem;
+            top: -0.5rem;
         }
     }
 
