@@ -12,7 +12,7 @@ app.mount('#app')
 
 /*creamos y exportamos una variable con la api para no 
 tener que estar escribiendola entera en cada peticion*/
-export const ApiUrl = "http://localhost:8001/api.php/";
+export const ApiUrl = "http://localhost:8001/api.php";
 
 /**
  * declaramos tres variables para poner tres colores distintos en función de
