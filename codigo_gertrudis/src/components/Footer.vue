@@ -31,13 +31,15 @@ const companeras = ["Lucía", "Ainhoa", "Nazaret", "Alba"];
                 </span>
             </div>
             <div class="col">
-                <!--<a href="mailto:codigogestrudis@gmail.com"></a>-->
-                <i class="bi bi-envelope"></i>
-                <!--<a href="https://www.instagram.com/codigogertrudis">-->
+                <a href="mailto:codigogestrudis@gmail.com">
+                    <i class="bi bi-envelope"></i>
+                </a>
+                <a href="https://www.instagram.com/codigogertrudis/">
                     <i class="bi bi-instagram"></i>
-                <!--</a>-->
-                <a href=""></a>
-                <i class="bi bi-youtube"></i>
+                </a>
+                <a href="https://www.youtube.com/channel/UCq8SYXlTi8NBWy-pHwNfTxw">
+                    <i class="bi bi-youtube"></i>
+                </a>
             </div>
         </div>
     </div>
