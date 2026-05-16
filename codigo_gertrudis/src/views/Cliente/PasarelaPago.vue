@@ -308,4 +308,64 @@ function continuar(){
         transform: translateY(-0.125rem);
     }
 
+    @media (max-width: 768px) {
+
+        #fondo {
+            padding: 1rem;
+            align-items: center;
+        }
+
+        .contenedor-pago {
+            flex-direction: column;
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+        }
+
+        .contenedor-pago img {
+            display: none;
+        }
+
+        .contenedor-pago form {
+            width: 100%;
+            padding: 2rem 1.5rem;
+            justify-content: center;
+        }
+
+        form {
+            border-radius: 20px;
+        }
+
+        .mensaje {
+            width: 100%;
+            margin-bottom: 1rem;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .mensaje button {
+            top: 0.5rem;
+            right: 0.5rem;
+        }
+
+        .btn-pagar {
+            width: 100%;
+            padding: 0.8rem;
+        }
+
+        .modal-container {
+            width: 92%;
+            padding: 1rem;
+        }
+
+        .modal-footer {
+            flex-direction: column;
+        }
+
+        .modal-footer button {
+            width: 100%;
+        }
+    }
+
 </style>

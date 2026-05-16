@@ -156,4 +156,58 @@ obtenerDatosUsuario()
         object-fit: cover;
     }
 
+    @media (max-width: 768px) {
+
+        #body {
+            padding: 1rem;
+        }
+
+        main {
+            width: 100%;
+            padding: 1rem;
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        main a {
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .img-circle {
+            width: 6rem;
+            height: 6rem;
+            margin-bottom: 1rem;
+        }
+
+        table {
+            display: block;
+            width: 100%;
+            overflow-x: auto;
+            white-space: nowrap;
+            border-radius: 0.5rem;
+        }
+
+        thead, tbody, tr, th, td {
+            font-size: 0.85rem;
+        }
+
+        th, td {
+            padding: 0.5rem;
+        }
+
+        th {
+            width: auto;
+            white-space: nowrap;
+        }
+
+        .img-avatar {
+            width: 3rem;
+            height: 3rem;
+        }
+    }
+
 </style>

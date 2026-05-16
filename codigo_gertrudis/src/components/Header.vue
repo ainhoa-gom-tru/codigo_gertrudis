@@ -39,6 +39,9 @@ function cerrarSesion(){
                     <img src="/logotipo.png" alt="Logotipo de Código Gertrudis">
                 </RouterLink>
             </div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
@@ -102,6 +105,7 @@ function cerrarSesion(){
         margin: auto;
         justify-content: center;
         align-items: center;
+        z-index: 9999; 
     }
 
     #logo img{
@@ -256,6 +260,58 @@ function cerrarSesion(){
 
     .cerrar-sesion button i{
         font-size: 0.2rem;
+    }
+
+    @media (max-width: 768px) {
+
+        .navbar {
+            margin: 0;
+            display: flex;
+            margin-bottom: 2rem;
+        }
+
+        #logo img {
+            width: 10rem;
+        }
+
+        .collapse.navbar-collapse {
+            position: relative;
+            left: auto;
+            transform: none;
+        }
+
+        .navbar-toggler{
+            background-color: #fcbf00;
+            border: none;
+            border-radius: 1rem;
+        }
+
+        .button {
+            position: static;
+            width: 100%;
+            height: 4rem;
+            margin: 1rem 0 0 0;
+            border-radius: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .button > div[data-v-c970699f] {
+            gap: 0.3rem;
+            width: 12rem;
+        }
+
+        .button > a:nth-child(1) {
+            margin-left: 11rem;
+        }
+
+        .cerrar-sesion {
+            position: static;
+            width: 100%;
+            margin: 0;
+            border-radius: 0;
+        }
+
     }
 
 </style>

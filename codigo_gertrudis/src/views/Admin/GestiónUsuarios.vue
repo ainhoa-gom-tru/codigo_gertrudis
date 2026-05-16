@@ -461,4 +461,86 @@ function cerrarMensaje(){
         transform: translateY(-0.125rem);
     }
 
+    @media (max-width: 768px) {
+
+        #body {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        main {
+            width: 100%;
+            margin: 0;
+            padding: 1rem;
+        }
+
+        main h4 {
+            text-align: center;
+            font-size: 1.3rem;
+        }
+
+        .mensaje {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+            padding: 1rem;
+        }
+
+        .mensaje button {
+            top: 0.5rem;
+            right: 0.5rem;
+        }
+
+        table {
+            display: block;
+            width: 100%;
+        }
+
+        thead, tbody, tr, th, td {
+            font-size: 0.85rem;
+        }
+
+        th, td {
+            padding: 0.5rem;
+        }
+
+        th:nth-child(3), td:nth-child(3) {
+            display: none;
+        }
+
+        .btn, .btn-eliminar {
+            font-size: 0.8rem;
+            padding: 0.3rem 0.5rem;
+        }
+
+        select {
+            font-size: 0.8rem;
+            padding: 0.3rem;
+        }
+
+        .pagination {
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.3rem;
+        }
+
+        .pagination li {
+            margin: 0.1rem;
+            padding: 0.2rem 0.4rem;
+        }
+
+        .modal-container {
+            width: 92%;
+            padding: 1rem;
+        }
+
+        .modal-footer {
+            flex-direction: column;
+        }
+
+        .modal-footer button {
+            width: 100%;
+        }
+    }
+
 </style>

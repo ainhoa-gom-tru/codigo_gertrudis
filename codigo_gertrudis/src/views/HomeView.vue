@@ -1,10 +1,13 @@
 <script setup>
-import { ApiUrl } from '@/main';
+import { ApiUrl, estiloRojo, estiloVerde } from '@/main';
 import { ref } from 'vue';
 
 //crea las siguientes variables
 const productos = ref([]);
 const valoraciones = ref([]);
+const entradas = ref([]);
+const error = ref(false);
+const exito = ref(false);
 
 //recuperamos el usuario logueaod del local storage
 const usuarioLogueado = JSON.parse(localStorage.getItem('user') || 'null');
@@ -59,6 +62,7 @@ function añadirCarrito(producto) {
     })
     .catch(error => {
         console.error('Error:', error)
+        error.value = true;
     });
 }
 
@@ -88,33 +92,26 @@ function calcularMediaValoracion(producto_id){
     return (suma / filtradas.length).toFixed(1);
 }
 
-//array de objectos para el carrusel
-const personas = [
-  {
-    nombre: "Lucía",
-    descripcion:
-      "Lucía es una persona muy sensible y amante de los animales, que destaca por su empatía hacia ellos y su forma de cuidarlos siempre que puede.",
-    foto: "lucia.png",
-  },
-  {
-    nombre: "Ainhoa",
-    descripcion:
-      "Ainhoa es una persona muy familiar que valora profundamente el tiempo con sus seres queridos y los recuerdos que comparte con ellos.",
-    foto: "ainhoa.png",
-  },
-  {
-    nombre: "Nazaret",
-    descripcion:
-      "Nazaret es una persona creativa y con una gran sensibilidad artística. Le apasiona el cine, la música rock y las actividades al aire libre.",
-    foto: "nazaret.png",
-  },
-  {
-    nombre: "Alba",
-    descripcion:
-      "Alba es una persona algo despistada pero muy creativa. Le apasiona la fotografía y el cine romántico.",
-    foto: "alba.png",
-  },
-];
+//funcion para obtener todos los usuarios
+function obtenerTodasEntradas(){
+    fetch(ApiUrl + '/blog', {
+        method: 'GET',
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Entradas:', data)
+        entradas.value = data;
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+obtenerTodasEntradas();
+
+//función para cerrar el modal
+function cerrarModal(){
+    error.value = false;
+    exito.value = false;
+}
 
 </script>
 
@@ -190,6 +187,21 @@ const personas = [
                 </div>     
             </div>
         </div>
+    </div>
+  </section>
+  <section id="tercera">
+    <div v-for="entrada in entradas.slice(0, 1)">
+        <div>
+            <h4>{{ entrada.titulo }}</h4>
+            <p>{{ entrada.texto }}</p>
+            <button>
+                <RouterLink :to="`/detalles-entrada/${entrada.titulo}`">
+                    <i class="bi bi-plus-lg"></i>
+                    Leer más
+                </RouterLink>
+            </button>
+        </div>
+        <img :src="`http://localhost:8001/blog/${entrada.foto}`" class="card-img-top" alt="Foto de la entrada del blog">
     </div>
   </section>
 
@@ -374,6 +386,147 @@ const personas = [
         background-color: #fcbf00;
         color: black;
         transform: translateY(-0.125rem);
+    }
+
+    .btn-close{ 
+        background-color: transparent;
+    }
+
+    .btn-close:hover {
+        transform: none;
+        background-color: transparent;
+    }
+
+    #tercera{
+        margin: 8rem 4rem 4rem 4rem;
+    }
+
+    #tercera div{
+        display: flex;
+    }
+
+    #tercera div div{
+        display: block;
+    }
+
+    #tercera div div h4{
+        color: #fcbf00;
+        font-size: 2rem;
+        font-weight: bold;
+        margin: 3rem 2rem 2rem 2rem;
+    }
+
+    #tercera div div p{
+        margin: 2rem;
+        line-height: 1.4rem;
+        max-height: 4.5rem;
+        overflow: hidden;
+        position: relative;
+        padding-right: 1.2rem;
+    }
+
+    #tercera div div button{
+        margin: 0rem 2rem;
+    }
+
+    #tercera div img{
+        width: 20rem;
+        border-radius: 2rem;
+        margin-right: 4rem;
+    }
+
+    @media (max-width: 768px) {
+
+        #primera {
+            height: 70vh;
+        }
+
+        .contenido {
+            width: 90%;
+            text-align: center;
+        }
+
+        button {
+            padding: 0.7rem;
+            font-size: 0.9rem;
+        }
+
+        #todosProductos {
+            flex-direction: column;
+            align-items: center;
+            margin-left: 0;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            width: 90% !important;
+            margin: 0.8rem 0;
+        }
+
+        .card img {
+            height: 180px;
+        }
+
+        #valoracion {
+            top: 5%;
+            right: 6%;
+            font-size: 0.85rem;
+        }
+
+        .modal-container {
+            width: 92%;
+            padding: 1rem;
+        }
+
+        .modal-body {
+            font-size: 0.9rem;
+        }
+
+        .modal-footer {
+            flex-direction: column;
+        }
+
+        .modal-footer button {
+            width: 100%;
+        }
+
+        .btn-close {
+            transform: none;
+        }
+
+        #tercera {
+            margin: 4rem 1rem;
+        }
+
+        #tercera div {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #tercera div img {
+            width: 100%;
+            max-width: 18rem;
+            margin: 1rem 0;
+        }
+
+        #tercera div div {
+            text-align: center;
+        }
+
+        #tercera div div h4 {
+            font-size: 1.4rem;
+            margin: 1rem;
+        }
+
+        #tercera div div p {
+            margin: 1rem;
+            font-size: 0.9rem;
+        }
+
+        #tercera div div button {
+            margin: 1rem auto;
+        }
     }
 
 </style>

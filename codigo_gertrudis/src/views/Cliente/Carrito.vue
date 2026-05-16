@@ -403,4 +403,86 @@ function cerrarMensaje(){
         transform: translateY(-0.125rem);
     }
 
+    @media (max-width: 768px) {
+
+        h4 {
+            margin: 1.5rem 1rem;
+            text-align: center;
+        }
+
+        .carrito {
+            margin: 0 1rem;
+        }
+
+        .mensaje {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+            padding: 1rem;
+        }
+
+        .mensaje button {
+            top: 0.5rem;
+            right: 0.5rem;
+        }
+
+        .card-body {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1rem;
+        }
+
+        .card-body img {
+            width: 100%;
+            height: 12rem;
+        }
+
+        .card-body > div:nth-of-type(1) {
+            width: 100%;
+        }
+
+        .acciones {
+            width: 100%;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            margin-right: 0;
+            gap: 1rem;
+        }
+
+        .acciones input {
+            width: 5rem;
+            margin-bottom: 0;
+        }
+
+        .btn-eliminar {
+            width: auto;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .total {
+            text-align: center;
+            font-size: 1.3rem;
+        }
+
+        .btn-pedido {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .modal-container {
+            width: 92%;
+            padding: 1rem;
+        }
+
+        .modal-footer {
+            flex-direction: column;
+        }
+
+        .modal-footer button {
+            width: 100%;
+        }
+    }
+
 </style>

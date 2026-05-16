@@ -33,9 +33,9 @@ const companeras = ["Lucía", "Ainhoa", "Nazaret", "Alba"];
             <div class="col">
                 <!--<a href="mailto:codigogestrudis@gmail.com"></a>-->
                 <i class="bi bi-envelope"></i>
-                <a href="https://www.instagram.com/codigogertrudis">
+                <!--<a href="https://www.instagram.com/codigogertrudis">-->
                     <i class="bi bi-instagram"></i>
-                </a>
+                <!--</a>-->
                 <a href=""></a>
                 <i class="bi bi-youtube"></i>
             </div>
