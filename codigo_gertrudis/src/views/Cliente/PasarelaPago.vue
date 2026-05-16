@@ -41,11 +41,28 @@ const validarCvc = computed(() => {
 
 //validamos la fecha de vencimiento de la tarjeta
 const validarFecha = computed(() => {
-    if(!fechaRegex.test(fechaVencimiento.value) && fechaVencimiento.value.length >= 1){
+    if (!fechaRegex.test(fechaVencimiento.value) && fechaVencimiento.value.length >= 1) {
         return false;
-    } else if(fechaVencimiento.value.length === 0){
+    } else if (fechaVencimiento.value.length === 0) {
         return null;
     } else {
+        //separamos la fecha que nos intrudcen por /
+        const separarFecha = fechaVencimiento.value.split('/');
+        //obtenemos el mes y año
+        const mesTarjeta = parseInt(separarFecha[0]);
+        const anoTarjeta = parseInt(separarFecha[1]);
+        //obtenemos el mes y año actuales
+        const hoy = new Date();
+        const mesActual = hoy.getMonth() + 1;
+        const anoActual = parseInt(hoy.getFullYear().toString().slice(-2));
+        //validamos que la tarjeta no esté caducada
+        if (anoTarjeta < anoActual) {
+            return false;
+        }
+        if (anoTarjeta === anoActual && mesTarjeta <= mesActual) {
+            return false;
+        }
+
         return true;
     }
 });
@@ -133,9 +150,9 @@ function continuar(){
                         <i v-else :style="estiloVerde" class="bi bi-check"></i>
                     </label>
                     <input v-model="fechaVencimiento" :style="validarFecha === null ? bordeNatural : !validarFecha ? bordeRojo : bordeVerde" type="text" class="form-control" id="fechaVencimiento" aria-label="Fecha de vencimiento" placeholder="Ej: 04/38">
-                    <p v-if="validarFecha === false" :style="estiloRojo">* El formato de la fecha no es correcto</p>
+                    <p v-if="validarFecha === false" :style="estiloRojo">* El formato no es correcto o tu tarjeta esá caducada</p>
                 </div>
-                <button type="submit" class="btn-pagar">
+                <button type="submit" class="btn-pagar" :disabled="!validarCvc || !validarFecha || !validarTarjeta">
                     <i class="bi bi-wallet-fill"></i>
                     Pagar
                 </button>
@@ -167,6 +184,7 @@ function continuar(){
         background: linear-gradient(90deg, #ff8800,#fcbf00);
         min-height: 100vh;
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
     }
@@ -253,6 +271,17 @@ function continuar(){
         background-color: #ff8800;
         color: white;
         transform: translateY(-0.125rem);
+    }
+
+    .btn-pagar:disabled {
+        opacity: 0.5;
+        cursor: default;
+        transform: none;
+    }
+
+    .btn-pagar:disabled:hover {
+        background-color: #fcbf00;
+        color: black;
     }
 
     .modal-overlay {

@@ -61,7 +61,7 @@ function formatearFecha(fecha) {
             <div class="accordion-item">
                 <h2 class="accordion-header">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="`#collapse-${pedido.pedido_id}`" aria-expanded="false" :aria-controls="`collapse-${pedido.pedido_id}`">
-                    Pedido {{ pedido.pedido_id }}
+                    Pedido {{ formatearFecha(pedido.fecha_pedido) }}
                 </button>
                 </h2>
                 <div :id="`collapse-${pedido.pedido_id}`" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">

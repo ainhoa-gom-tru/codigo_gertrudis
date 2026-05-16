@@ -125,6 +125,7 @@ function anadirEntradaBlog(){
         //vaciamos el formulario
         titulo.value = '';
         texto.value = '';
+        nuevaCategoria.value = '';
         foto.value = null;
         dimensiones.value = null;
         extension.value = null;

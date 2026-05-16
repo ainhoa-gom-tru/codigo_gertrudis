@@ -26,7 +26,7 @@ if(usuarioLogueado){
                         Datos personales
                     </li>
                 </RouterLink>
-                <RouterLink to="/pedidos" v-slot="{ isActive }">
+                <RouterLink to="/pedidos" v-slot="{ isActive }" v-if="rolUsuario !== 'admin' && rolUsuario !== 'desarrollador'">
                     <li :class="{ active: isActive }">
                         <i class="bi bi-bag-check-fill"></i>
                         Mis pedidos

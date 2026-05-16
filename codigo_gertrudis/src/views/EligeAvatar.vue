@@ -1,10 +1,11 @@
 <script setup>
-import { ApiUrl } from '@/main';
+import { ApiUrl, estiloVerde } from '@/main';
 import router from '@/router';
 import { ref } from 'vue';
 
 //creamos la siguiente variable
 const avatarSeleccionado = ref('');
+const exito = ref(false);
 
 //recuperamos el usuario logueaod del local storage
 const usuarioLogueado = JSON.parse(localStorage.getItem('user') || 'null');
@@ -47,6 +48,7 @@ function actualizarAvatar(){
     usuarioLogueado.avatar = fotoUsuario.value;
     localStorage.setItem('user', JSON.stringify(usuarioLogueado));
     fotoUsuario.value = fotoUsuario.value;
+    exito.value = true;
   })
   .catch(error => console.error('Error:', error));
 }
@@ -63,10 +65,15 @@ function salir(){
     }
 }
 
+//funcion para cerrar el modal
+function cerrarModal(){
+    exito.value = false;
+}
+
 </script>
 
 <template>
-    <div>
+    <div class="contenedor-avatar">
         <aside>
             <button v-for="(avatar, index) in avatars" :key="index" @click="cambiarAvatar(avatar)" :class="{ activo: avatarSeleccionado === avatar }">
                 <img :src="`/avatar/${avatar}`" alt="avatar">
@@ -80,11 +87,27 @@ function salir(){
             <button @click="salir">Salir</button>
         </section>
     </div>
+    <div v-if="exito" class="modal-overlay " tabindex="-1" role="dialog">
+        <div class="modal-container" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 :style="estiloVerde" class="modal-title fs-5" id="eliminarUsuario">Avatar actualizado exitosamente</h1>
+                    <button type="button" class="btn-close" @click="cerrarModal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¡Has actualizado tu avatar con éxito!</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-cerrar" @click="cerrarModal">Cerrar</button>
+                </div>     
+            </div>
+        </div>
+    </div>
 </template>
 
 <style scoped>
 
-    div {
+    .contenedor-avatar {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -180,6 +203,78 @@ function salir(){
     section button:last-child:hover {
         background-color: #fcbf00;
         color: black;
+    }
+
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0,0,0,0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .modal-container {
+        width: 90%;
+        max-width: 25rem;
+        border-radius: 0.875rem;
+        background: white;
+        box-shadow: 0 0.625rem 1.875rem rgba(0,0,0,0.3);
+        padding: 1.5rem;
+    }
+
+    .modal-content {
+        width: 100%;
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 0.0625rem solid #eee;
+        padding-bottom: 1rem;
+    }
+
+    .modal-body {
+        padding: 1rem 0;
+        font-size: 1rem;
+    }
+
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        padding-top: 1rem;
+    }
+
+    .btn-cerrar {
+        background-color: #ff8800;
+        color: white;
+        font-weight: bold;
+        border: none;
+        border-radius: 0.5rem;
+        padding: 0.4rem 0.7rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .btn-cerrar:hover{
+        background-color: #fcbf00;
+        color: black;
+        transform: translateY(-0.125rem);
+    }
+
+    .btn-close{ 
+        background-color: transparent;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+    }
+
+    .btn-close:hover {
+        transform: none;
+        background-color: transparent;
     }
 
 </style>

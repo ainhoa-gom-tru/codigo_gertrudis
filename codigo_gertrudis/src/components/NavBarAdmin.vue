@@ -57,7 +57,7 @@ if(usuarioLogueado.value){
                 <RouterLink v-if="rolUsuario === 'desarrollador'" to="/anadir-juego" v-slot="{ isActive }">
                     <li :class="{ active: isActive }">
                         <i class="bi bi-joystick"></i>
-                        Añadir de juegos
+                        Añadir juego
                     </li>
                 </RouterLink>
             </ul>
